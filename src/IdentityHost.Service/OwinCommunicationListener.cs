@@ -69,24 +69,26 @@ namespace IdentityHost.Service
 
                 this.listeningAddress = string.Format(
                     CultureInfo.InvariantCulture,
-                    "http://+:{0}/{1}{2}/{3}/{4}",
+                    "{5}://+:{0}/{1}{2}/{3}/{4}",
                     port,
                     string.IsNullOrWhiteSpace(this.appRoot)
                         ? string.Empty
                         : this.appRoot.TrimEnd('/') + '/',
                     statefulServiceContext.PartitionId,
                     statefulServiceContext.ReplicaId,
-                    Guid.NewGuid());
+                    Guid.NewGuid(),
+                    serviceEndpoint.Protocol);
             }
             else if (this.serviceContext is StatelessServiceContext)
             {
                 this.listeningAddress = string.Format(
                     CultureInfo.InvariantCulture,
-                    "http://+:{0}/{1}",
+                    "{2}://+:{0}/{1}",
                     port,
                     string.IsNullOrWhiteSpace(this.appRoot)
                         ? string.Empty
-                        : this.appRoot.TrimEnd('/') + '/');
+                        : this.appRoot.TrimEnd('/') + '/',
+                    serviceEndpoint.Protocol);
             }
             else
             {

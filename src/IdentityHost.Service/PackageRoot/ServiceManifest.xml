@@ -28,7 +28,7 @@
       <!-- 通信侦听器使用此终结点来获取要侦听的
            端口。请注意，如果你的服务已分区，此端口将与
            代码内放置的不同分区的副本共享。 -->
-      <Endpoint Protocol="http" Name="ServiceEndpoint" Type="Input" Port="8470" />
+      <Endpoint Protocol="https" Name="ServiceEndpoint" Type="Input" Port="8157" />
     </Endpoints>
   </Resources>
 </ServiceManifest>

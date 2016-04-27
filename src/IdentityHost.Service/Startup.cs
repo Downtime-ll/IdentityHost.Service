@@ -1,5 +1,10 @@
 ﻿using System.Web.Http;
+using IdentityHost.Service.IdSvr;
+using IdentityHost.Service.Services;
+using IdentityManager.Configuration;
+using IdentityServer3.Core.Configuration;
 using Owin;
+using WebHost.IdSvr;
 
 namespace IdentityHost.Service
 {
@@ -19,6 +24,32 @@ namespace IdentityHost.Service
             );
 
             appBuilder.UseWebApi(config);
+
+            appBuilder.Map("/admin", adminApp =>
+            {
+                var factory = new IdentityManagerServiceFactory();
+                factory.ConfigureSimpleIdentityManagerService("AspId");
+
+                adminApp.UseIdentityManager(new IdentityManagerOptions()
+                {
+                    Factory = factory
+                });
+            });
+
+            appBuilder.Map("/core", core =>
+            {
+                var idSvrFactory = Factory.Configure();
+                idSvrFactory.ConfigureUserService("AspId");
+
+                var options = new IdentityServerOptions
+                {
+                    SiteName = "IdentityServer3 - AspNetIdentity 2FA",
+                    SigningCertificate = Certificate.Get(),
+                    Factory = idSvrFactory,
+                };
+
+                core.UseIdentityServer(options);
+            });
         }
     }
 }
