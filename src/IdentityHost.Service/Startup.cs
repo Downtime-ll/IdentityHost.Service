@@ -32,7 +32,8 @@ namespace IdentityHost.Service
 
                 adminApp.UseIdentityManager(new IdentityManagerOptions()
                 {
-                    Factory = factory
+                    Factory = factory,
+                    SecurityConfiguration = {RequireSsl = false}
                 });
             });
 
@@ -44,7 +45,8 @@ namespace IdentityHost.Service
                 var options = new IdentityServerOptions
                 {
                     SiteName = "IdentityServer3 - AspNetIdentity 2FA",
-                    SigningCertificate = Certificate.Get(),
+                    RequireSsl = false,
+                    //SigningCertificate = Certificate.Get(),
                     Factory = idSvrFactory,
                 };
 
