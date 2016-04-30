@@ -4,7 +4,6 @@ using IdentityHost.Service.Services;
 using IdentityManager.Configuration;
 using IdentityServer3.Core.Configuration;
 using Owin;
-using WebHost.IdSvr;
 
 namespace IdentityHost.Service
 {

@@ -1,0 +1,18 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "IdentityServer3.AspNetIdentity Class Library",
+  "authors": [ "lvzhe" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "dependencies": {
+    "IdentityModel": "1.2.1",
+    "IdentityServer3": "2.5.0",
+    "Microsoft.AspNet.Identity": "3.0.0-rc1-final",
+    "Microsoft.AspNet.Identity.EntityFramework": "3.0.0-rc1-final"
+  },
+
+  "frameworks": {
+    "net451": { }
+  }
+}

@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using IdentityHost.Service.App_Packages.IdentityServer3.AspNetIdentity;
 using IdentityHost.Service.Models;
-using IdentityServer3.AspNetIdentity;
 using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 
-namespace WebHost.IdSvr
+namespace IdentityHost.Service.IdSvr
 {
     public static class UserServiceExtensions
     {
