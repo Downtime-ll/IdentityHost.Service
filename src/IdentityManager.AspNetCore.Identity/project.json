@@ -1,0 +1,20 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "IdentityManager.AspNetCore.Identity Class Library",
+  "authors": [ "lvzhe" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "IdentityManager": "1.0.0-beta5-1",
+    "IdentityServer3": "2.5.0",
+    "Microsoft.AspNet.Identity": "3.0.0-rc1-final",
+    "Microsoft.AspNet.Identity.EntityFramework": "3.0.0-rc1-final"
+  },
+
+  "frameworks": {
+    "net451": { }
+  
+  }
+}
