@@ -6,23 +6,18 @@ using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.InMemory;
 using IdentityService.Configuration;
 using IdentityService.Models;
 using IdentityService.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.Entity;
-using Microsoft.Extensions.OptionsModel;
 using Serilog;
-using InMemoryClientStore = IdentityService.Services.InMemoryClientStore;
+using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
 
 namespace IdentityService
 {
@@ -44,10 +39,13 @@ namespace IdentityService
             services.AddMvc();
             services.AddIdentityUserService<IdentityUserService>();
 
+            string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddEntityFramework()
                 .AddSqlServer()
-                .AddDbContext<IdentityContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-
+                .AddDbContext<IdentityContext>(options => options.UseSqlServer(connectionString))
+                .AddDbContext<ClientConfigurationContext>(o => o.UseSqlServer(connectionString))
+                .AddDbContext<ScopeConfigurationContext>(o => o.UseSqlServer(connectionString))
+                .AddDbContext<OperationalContext>(o => o.UseSqlServer(connectionString));
         }
 
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -85,23 +83,20 @@ namespace IdentityService
             var clientid = Clients.Get()[0].ClientId;
             app.Map("/core", config =>
             {
-                var clients = Clients.Get();
+                //var clients = Clients.Get();
                 var factory = new IdentityServerServiceFactory()
-                    .UseAspNetCoreIdentity(config)
-                    .UseInMemoryScopes(Scopes.Get());
+                    .UseAspNetCoreIdentity(config);
 
-                factory.Register(new Registration<IEnumerable<Client>>(clients));
-                factory.ClientStore = new Registration<IClientStore>(typeof(InMemoryClientStore));
-                factory.CorsPolicyService = new Registration<ICorsPolicyService>(new InMemoryCorsPolicyService(clients));
+                factory.ConfigureEntityFramework(app.ApplicationServices)
+                    .RegisterOperationalStores()
+                    .RegisterClientStore<Guid, ClientConfigurationContext>()
+                    .RegisterScopeStore<Guid, ScopeConfigurationContext>();
+              
 
                 var certFile = env.WebRootPath + $"{System.IO.Path.DirectorySeparatorChar}idsrv3test.pfx";
                 var idsrvOptions = new IdentityServerOptions
                 {
                     Factory = factory,
-                    //.UseInMemoryUsers(Users.Get())
-                    //.UseInMemoryClients(Clients.Get())
-                    //.UseInMemoryScopes(Scopes.Get()),
-
                     RequireSsl = false,
                     SigningCertificate = new X509Certificate2(certFile, "idsrv3test"),
                 };
@@ -125,10 +120,20 @@ namespace IdentityService
                     {
                         await db.Database.EnsureDeletedAsync();
 
-                        if (await db.Database.EnsureCreatedAsync())
+                        await db.Database.MigrateAsync();
                         {
                             await CreateAdminUser(serviceProvider);
                         }
+                    }
+
+                    using (var db = service.ServiceProvider.GetRequiredService<ClientConfigurationContext>())
+                    {
+                        await db.Database.MigrateAsync();
+                    }
+
+                    using (var db = service.ServiceProvider.GetRequiredService<ScopeConfigurationContext>())
+                    {
+                        await db.Database.MigrateAsync();
                     }
                 }
             }

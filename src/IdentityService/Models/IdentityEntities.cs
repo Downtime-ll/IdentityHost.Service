@@ -10,6 +10,7 @@ using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Data.Entity;
+using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
 
 namespace IdentityService.Models
 {
@@ -49,8 +50,20 @@ namespace IdentityService.Models
             //ThrowIfDisposed();
             return Context.Set<User>().FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
         }
+    }
 
+    public class ClientConfigurationContext : ClientConfigurationContext<Guid>
+    {
+        public ClientConfigurationContext(DbContextOptions options)
+            : base(options)
+        { }
+    }
 
+    public class ScopeConfigurationContext : ScopeConfigurationContext<Guid>
+    {
+        public ScopeConfigurationContext(DbContextOptions options)
+            : base(options)
+        { }
     }
 
     public class UserManager : UserManager<User>
