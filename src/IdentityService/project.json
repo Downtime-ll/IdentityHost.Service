@@ -17,11 +17,17 @@
     "Microsoft.AspNet.Server.WebListener": "1.0.0-rc1-final",
     "Microsoft.ServiceFabric.AspNet.Hosting": "1.0.0-rc1",
     "Microsoft.ServiceFabric.Services": "2.0.135",
-    "IdentityServer3.Integration.AspNet": "1.0.0-rc1",
     "IdentityServer3.AspNetCore.Identity": "1.0.0-*",
     "IdentityManager.AspNetCore.Identity": "1.0.0-*",
     "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
-    "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-rc1-final"
+    "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-rc1-final",
+    "Microsoft.AspNet.DataProtection": "1.0.0-rc1-final",
+    "Microsoft.Owin": "3.0.1",
+    "Microsoft.AspNet.Owin": "1.0.0-rc1-final",
+    "Serilog": "1.5.14",
+    "Serilog.Sinks.Literate": "1.2.0",
+    "Microsoft.AspNet.Authentication.JwtBearer": "1.0.0-rc1-final"
+
   },
 
   "commands": {

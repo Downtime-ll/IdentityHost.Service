@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 
 namespace IdentityService.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class ValuesController : Controller
     {
         // GET: api/values

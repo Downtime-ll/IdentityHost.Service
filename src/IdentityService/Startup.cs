@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.InMemory;
 using IdentityService.Configuration;
 using IdentityService.Models;
 using IdentityService.Services;
@@ -17,6 +21,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.OptionsModel;
+using Serilog;
+using InMemoryClientStore = IdentityService.Services.InMemoryClientStore;
 
 namespace IdentityService
 {
@@ -46,6 +52,23 @@ namespace IdentityService
 
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.LiterateConsole()
+                .CreateLogger();
+
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
+
+            app.UseJwtBearerAuthentication(options =>
+            {
+                options.Authority = "http://192.168.1.111:5005/core";
+                options.RequireHttpsMetadata = false;
+
+                options.Audience = "http://192.168.1.111:5005/core/resources";
+                options.AutomaticAuthenticate = true;
+            });
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -55,17 +78,23 @@ namespace IdentityService
 
             app.UseMvc();
 
+
             app.UseDatabaseErrorPage();
             app.UseDeveloperExceptionPage();
 
-
+            var clientid = Clients.Get()[0].ClientId;
             app.Map("/core", config =>
             {
+                var clients = Clients.Get();
                 var factory = new IdentityServerServiceFactory()
                     .UseAspNetCoreIdentity(config)
-                    .UseInMemoryClients(Clients.Get())
                     .UseInMemoryScopes(Scopes.Get());
 
+                factory.Register(new Registration<IEnumerable<Client>>(clients));
+                factory.ClientStore = new Registration<IClientStore>(typeof(InMemoryClientStore));
+                factory.CorsPolicyService = new Registration<ICorsPolicyService>(new InMemoryCorsPolicyService(clients));
+
+                var certFile = env.WebRootPath + $"{System.IO.Path.DirectorySeparatorChar}idsrv3test.pfx";
                 var idsrvOptions = new IdentityServerOptions
                 {
                     Factory = factory,
@@ -73,10 +102,13 @@ namespace IdentityService
                     //.UseInMemoryClients(Clients.Get())
                     //.UseInMemoryScopes(Scopes.Get()),
 
-                    RequireSsl = false
+                    RequireSsl = false,
+                    SigningCertificate = new X509Certificate2(certFile, "idsrv3test"),
                 };
                 config.UseIdentityServer(idsrvOptions);
             });
+
+            
 
             await SampleData.InitializeIdentityDatabaseAsync(app.ApplicationServices);
 
@@ -86,13 +118,17 @@ namespace IdentityService
         {
             public static async Task InitializeIdentityDatabaseAsync(IServiceProvider serviceProvider)
             {
-                using (var db = serviceProvider.GetRequiredService<IdentityContext>())
+                using (var service = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
                 {
+
+                    using (var db = service.ServiceProvider.GetRequiredService<IdentityContext>())
+                    {
                         await db.Database.EnsureDeletedAsync();
 
-                    if (await db.Database.EnsureCreatedAsync())
-                    {
-                        await CreateAdminUser(serviceProvider);
+                        if (await db.Database.EnsureCreatedAsync())
+                        {
+                            await CreateAdminUser(serviceProvider);
+                        }
                     }
                 }
             }

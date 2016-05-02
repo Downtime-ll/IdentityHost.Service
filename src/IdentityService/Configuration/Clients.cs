@@ -19,12 +19,13 @@ namespace IdentityService.Configuration
                     },
 
                     // server to server communication
-                    Flow = Flows.ClientCredentials,
+                    Flow = Flows.ResourceOwner,
 
                     // only allowed to access api1
                     AllowedScopes = new List<string>
                     {
-                        "api1"
+                        "api1",
+                        "scope"
                     }
                 },
 

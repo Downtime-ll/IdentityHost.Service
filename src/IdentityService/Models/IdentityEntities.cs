@@ -27,6 +27,11 @@ namespace IdentityService.Models
             : base(options)
         {
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 
     public class IdentityUserStore : UserStore<User,Role, IdentityContext>
@@ -40,6 +45,7 @@ namespace IdentityService.Models
         public override Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
+            cancellationToken = CancellationToken.None;
             //ThrowIfDisposed();
             return Context.Set<User>().FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
         }
