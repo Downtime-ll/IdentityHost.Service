@@ -38,22 +38,23 @@ namespace IdentityService.Services
 
         public static IdentityServerServiceFactory UseAspNetCoreIdentity(this IdentityServerServiceFactory factory, IApplicationBuilder appBuilder)
         {
-            const string key ="IdentityService_CurrentRequestServices";
+            factory.Register(new Registration<IServiceScopeFactory>(appBuilder.ApplicationServices.GetService<IServiceScopeFactory>()));
 
 
-            appBuilder.Use(async (context, next) =>
-           {
-               CallContext.LogicalSetData(key, context.RequestServices);
-               await next();
-           });
+           // const string key ="IdentityService_CurrentRequestServices";
 
-            factory.UserService = new Registration<IUserService>(_ =>
-            {
-                var serviceProvider =
-                    CallContext.LogicalGetData(key) as IServiceProvider;
-                 
-                return serviceProvider.GetService<IUserService>();
-            });
+
+           // appBuilder.Use(async (context, next) =>
+           //{
+           //    CallContext.LogicalSetData(key, context.RequestServices);
+           //    await next();
+           //});
+
+            factory.UserService =
+                new Registration<IUserService>(resolver =>
+                        resolver.Resolve<IServiceScopeFactory>()
+                            .CreateScope()
+                            .ServiceProvider.GetService<IUserService>());
             return factory;
         }
     }

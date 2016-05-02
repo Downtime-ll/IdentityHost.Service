@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IdentityServer3.Core.Configuration;
-using IdentityService.Configuration;
 using IdentityService.Models;
 using IdentityService.Services;
 using Microsoft.AspNet.Builder;
@@ -80,10 +79,8 @@ namespace IdentityService
             app.UseDatabaseErrorPage();
             app.UseDeveloperExceptionPage();
 
-            var clientid = Clients.Get()[0].ClientId;
             app.Map("/core", config =>
             {
-                //var clients = Clients.Get();
                 var factory = new IdentityServerServiceFactory()
                     .UseAspNetCoreIdentity(config);
 
@@ -102,8 +99,6 @@ namespace IdentityService
                 };
                 config.UseIdentityServer(idsrvOptions);
             });
-
-            
 
             await SampleData.InitializeIdentityDatabaseAsync(app.ApplicationServices);
 

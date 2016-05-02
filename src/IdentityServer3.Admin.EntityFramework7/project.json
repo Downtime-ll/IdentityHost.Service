@@ -1,0 +1,19 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "IdentityServer3.Admin.EntityFramework7 Class Library",
+  "authors": [ "lvzhe" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "IdentityServer3.Admin": "1.0.0-beta8",
+    "TwentyTwenty.IdentityServer3.EntityFramework7": "0.9.7",
+    "AutoMapper": "4.2.1"
+  },
+
+  "frameworks": {
+    "net451": { }
+   
+  }
+}
