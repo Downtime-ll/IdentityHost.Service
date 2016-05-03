@@ -8,8 +8,8 @@ using IdentityService.Models;
 namespace IdentityService.Migrations.ClientConfiguration
 {
     [DbContext(typeof(ClientConfigurationContext))]
-    [Migration("20160502112532_AddClientModels")]
-    partial class AddClientModels
+    [Migration("20160503082417_AddClientConfigurationModels")]
+    partial class AddClientConfigurationModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -17,9 +17,9 @@ namespace IdentityService.Migrations.ClientConfiguration
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AbsoluteRefreshTokenLifetime");
@@ -87,12 +87,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "Clients");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientClaim<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientClaim<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId");
+                    b.Property<int?>("ClientId");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -107,12 +107,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientClaims");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCorsOrigin<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCorsOrigin<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<int?>("ClientId")
                         .IsRequired();
 
                     b.Property<string>("Origin")
@@ -124,12 +124,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientCorsOrigins");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<int?>("ClientId")
                         .IsRequired();
 
                     b.Property<string>("GrantType")
@@ -141,12 +141,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientCustomGrantTypes");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientPostLogoutRedirectUri<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientPostLogoutRedirectUri<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<int?>("ClientId")
                         .IsRequired();
 
                     b.Property<string>("Uri")
@@ -158,12 +158,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientPostLogoutRedirectUris");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientProviderRestriction<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientProviderRestriction<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<int?>("ClientId")
                         .IsRequired();
 
                     b.Property<string>("Provider")
@@ -175,12 +175,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientProviderRestrictions");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientRedirectUri<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientRedirectUri<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<int?>("ClientId")
                         .IsRequired();
 
                     b.Property<string>("Uri")
@@ -192,12 +192,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientRedirectUris");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientScope<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientScope<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<int?>("ClientId")
                         .IsRequired();
 
                     b.Property<string>("Scope")
@@ -209,12 +209,12 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientScopes");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<int?>("ClientId")
                         .IsRequired();
 
                     b.Property<string>("Description")
@@ -234,58 +234,58 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasAnnotation("Relational:TableName", "ClientSecrets");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientClaim<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientClaim<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCorsOrigin<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCorsOrigin<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientPostLogoutRedirectUri<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientPostLogoutRedirectUri<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientProviderRestriction<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientProviderRestriction<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientRedirectUri<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientRedirectUri<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientScope<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientScope<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });

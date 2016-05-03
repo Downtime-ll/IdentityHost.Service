@@ -8,8 +8,8 @@ using IdentityService.Models;
 namespace IdentityService.Migrations.ScopeConfiguration
 {
     [DbContext(typeof(ScopeConfigurationContext))]
-    [Migration("20160502112731_AddScopeModels")]
-    partial class AddScopeModels
+    [Migration("20160503082448_AddScopeConfiguration")]
+    partial class AddScopeConfiguration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -17,9 +17,9 @@ namespace IdentityService.Migrations.ScopeConfiguration
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimsRule")
@@ -52,9 +52,9 @@ namespace IdentityService.Migrations.ScopeConfiguration
                     b.HasAnnotation("Relational:TableName", "Scopes");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeClaim<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeClaim<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<bool>("AlwaysIncludeInIdToken");
@@ -66,16 +66,16 @@ namespace IdentityService.Migrations.ScopeConfiguration
                         .IsRequired()
                         .HasAnnotation("MaxLength", 200);
 
-                    b.Property<Guid?>("ScopeId");
+                    b.Property<int?>("ScopeId");
 
                     b.HasKey("Id");
 
                     b.HasAnnotation("Relational:TableName", "ScopeClaims");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeSecret<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeSecret<int>", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
@@ -83,7 +83,7 @@ namespace IdentityService.Migrations.ScopeConfiguration
 
                     b.Property<DateTime?>("Expiration");
 
-                    b.Property<Guid?>("ScopeId");
+                    b.Property<int?>("ScopeId");
 
                     b.Property<string>("Type")
                         .HasAnnotation("MaxLength", 250);
@@ -97,16 +97,16 @@ namespace IdentityService.Migrations.ScopeConfiguration
                     b.HasAnnotation("Relational:TableName", "ScopeSecrets");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeClaim<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeClaim<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<int>")
                         .WithMany()
                         .HasForeignKey("ScopeId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeSecret<System.Guid>", b =>
+            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeSecret<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<System.Guid>")
+                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<int>")
                         .WithMany()
                         .HasForeignKey("ScopeId");
                 });

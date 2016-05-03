@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using IdentityAdmin.Configuration;
+using IdentityAdmin.Core;
 using IdentityServer3.Core.Configuration;
 using IdentityService.Models;
 using IdentityService.Services;
@@ -17,6 +19,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Data.Entity;
 using Serilog;
 using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
+using IdentityAdmin.Configuration;
+using Owin;
+
+
+using DataProtectionProviderDelegate = System.Func<string[], System.Tuple<System.Func<byte[], byte[]>, System.Func<byte[], byte[]>>>;
+using DataProtectionTuple = System.Tuple<System.Func<byte[], byte[]>, System.Func<byte[], byte[]>>;
 
 namespace IdentityService
 {
@@ -55,16 +63,16 @@ namespace IdentityService
                 .CreateLogger();
 
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
 
-            app.UseJwtBearerAuthentication(options =>
-            {
-                options.Authority = "http://192.168.1.111:5005/core";
-                options.RequireHttpsMetadata = false;
+            //app.UseJwtBearerAuthentication(options =>
+            //{
+            //    options.Authority = "http://192.168.1.111:5005/core";
+            //    options.RequireHttpsMetadata = false;
 
-                options.Audience = "http://192.168.1.111:5005/core/resources";
-                options.AutomaticAuthenticate = true;
-            });
+            //    options.Audience = "http://192.168.1.111:5005/core/resources";
+            //    options.AutomaticAuthenticate = true;
+            //});
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -79,6 +87,45 @@ namespace IdentityService
             app.UseDatabaseErrorPage();
             app.UseDeveloperExceptionPage();
 
+            app.Map("/adm", adminApp =>
+            {
+                var factory = new IdentityAdminServiceFactory();
+                factory.Register(new IdentityAdmin.Configuration.Registration<IServiceScopeFactory>(app.ApplicationServices.GetService<IServiceScopeFactory>()));
+
+                factory.IdentityAdminService =
+                    new IdentityAdmin.Configuration.Registration<IIdentityAdminService>(
+                        resolver => resolver.Resolve<IServiceScopeFactory>().CreateScope().ServiceProvider.GetService<IdentityAdminManagerService>());
+                adminApp.UseOwin(addToPipeline =>
+                {
+                    addToPipeline(next =>
+                    {
+                        var builder = new Microsoft.Owin.Builder.AppBuilder();
+                        var provider =
+                            app.ApplicationServices.GetRequiredService<Microsoft.AspNet.DataProtection.IDataProtectionProvider>();
+
+                        builder.Properties["security.DataProtectionProvider"] =
+                            new DataProtectionProviderDelegate(purposes =>
+                            {
+                                var dataProtection = provider.CreateProtector(String.Join(",", purposes));
+                                return new DataProtectionTuple(dataProtection.Protect, dataProtection.Unprotect);
+                            });
+
+                        builder.UseIdentityAdmin(new IdentityAdminOptions
+                        {
+                            Factory = factory,
+                            AdminSecurityConfiguration = {RequireSsl = false}
+                        });
+
+                        var appFunc =
+                            builder.Build(typeof (Func<IDictionary<string, object>, Task>)) as
+                                Func<IDictionary<string, object>, Task>;
+                        return appFunc;
+                    });
+
+                });
+
+            });
+
             app.Map("/core", config =>
             {
                 var factory = new IdentityServerServiceFactory()
@@ -86,8 +133,8 @@ namespace IdentityService
 
                 factory.ConfigureEntityFramework(app.ApplicationServices)
                     .RegisterOperationalStores()
-                    .RegisterClientStore<Guid, ClientConfigurationContext>()
-                    .RegisterScopeStore<Guid, ScopeConfigurationContext>();
+                    .RegisterClientStore<int, ClientConfigurationContext>()
+                    .RegisterScopeStore<int, ScopeConfigurationContext>();
               
 
                 var certFile = env.WebRootPath + $"{System.IO.Path.DirectorySeparatorChar}idsrv3test.pfx";

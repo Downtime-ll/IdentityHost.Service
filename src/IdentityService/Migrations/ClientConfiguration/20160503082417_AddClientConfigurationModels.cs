@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
+using Microsoft.Data.Entity.Metadata;
 
 namespace IdentityService.Migrations.ClientConfiguration
 {
-    public partial class AddClientModels : Migration
+    public partial class AddClientConfigurationModels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +13,8 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "Clients",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AbsoluteRefreshTokenLifetime = table.Column<int>(nullable: false),
                     AccessTokenLifetime = table.Column<int>(nullable: false),
                     AccessTokenType = table.Column<int>(nullable: false),
@@ -42,22 +44,23 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Client<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_Client<int>", x => x.Id);
                 });
             migrationBuilder.CreateTable(
                 name: "ClientClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: true),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: true),
                     Type = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientClaim<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientClaim<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientClaim<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientClaim<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -67,15 +70,16 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientCorsOrigins",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
                     Origin = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientCorsOrigin<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientCorsOrigin<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientCorsOrigin<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientCorsOrigin<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -85,15 +89,16 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientCustomGrantTypes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
                     GrantType = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientCustomGrantType<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientCustomGrantType<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientCustomGrantType<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientCustomGrantType<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -103,15 +108,16 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientPostLogoutRedirectUris",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
                     Uri = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientPostLogoutRedirectUri<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientPostLogoutRedirectUri<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientPostLogoutRedirectUri<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientPostLogoutRedirectUri<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -121,15 +127,16 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientProviderRestrictions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
                     Provider = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientProviderRestriction<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientProviderRestriction<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientProviderRestriction<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientProviderRestriction<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -139,15 +146,16 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientRedirectUris",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
                     Uri = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientRedirectUri<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientRedirectUri<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientRedirectUri<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientRedirectUri<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -157,15 +165,16 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientScopes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
                     Scope = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientScope<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientScope<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientScope<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientScope<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -175,8 +184,9 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientSecrets",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Expiration = table.Column<DateTime>(nullable: true),
                     Type = table.Column<string>(nullable: true),
@@ -184,16 +194,16 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientSecret<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ClientSecret<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientSecret<Guid>_Client<Guid>_ClientId",
+                        name: "FK_ClientSecret<int>_Client<int>_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
             migrationBuilder.CreateIndex(
-                name: "IX_Client<Guid>_ClientId",
+                name: "IX_Client<int>_ClientId",
                 table: "Clients",
                 column: "ClientId",
                 unique: true);

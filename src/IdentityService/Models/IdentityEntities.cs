@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading;
 using System.Threading.Tasks;
+using IdentityServer3.Admin.EntityFramework7;
+using IdentityServer3.Admin.EntityFramework7.Entities;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -14,7 +16,7 @@ using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
 
 namespace IdentityService.Models
 {
-    public class User : IdentityUser 
+    public class User : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -28,14 +30,9 @@ namespace IdentityService.Models
             : base(options)
         {
         }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
     }
 
-    public class IdentityUserStore : UserStore<User,Role, IdentityContext>
+    public class IdentityUserStore : UserStore<User, Role, IdentityContext>
     {
         public IdentityUserStore(IdentityContext ctx, IdentityErrorDescriber describer = null)
             : base(ctx, describer)
@@ -52,18 +49,25 @@ namespace IdentityService.Models
         }
     }
 
-    public class ClientConfigurationContext : ClientConfigurationContext<Guid>
+    public class ClientConfigurationContext : ClientConfigurationContext<int>
     {
         public ClientConfigurationContext(DbContextOptions options)
             : base(options)
         { }
     }
 
-    public class ScopeConfigurationContext : ScopeConfigurationContext<Guid>
+    public class ScopeConfigurationContext : ScopeConfigurationContext<int>
     {
         public ScopeConfigurationContext(DbContextOptions options)
             : base(options)
         { }
+    }
+
+    public class IdentityAdminManagerService : IdentityAdminCoreManager<IdentityClient, IdentityScope, ScopeConfigurationContext, ClientConfigurationContext>
+    {
+        public IdentityAdminManagerService(ScopeConfigurationContext scopeContext, ClientConfigurationContext clientContext) : base(scopeContext, clientContext)
+        {
+        }
     }
 
     public class UserManager : UserManager<User>
@@ -78,30 +82,9 @@ namespace IdentityService.Models
             IServiceProvider services,
             ILogger<UserManager<User>> logger,
             IHttpContextAccessor contextAccessor)
-            : base(store,optionsAccessor,passwordHasher,userValidators,passwordValidators,keyNormalizer,errors,services,logger,contextAccessor)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger, contextAccessor)
         {
-            //this.RegisterTwoFactorProvider("sms", new Sms());
         }
-
-        /// <summary>
-        /// Finds and returns a user, if any, who has the specified normalized user name.
-        /// </summary>
-        /// <param name="normalizedUserName">The normalized user name to search for.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>
-        /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="userID"/> if it exists.
-        /// </returns>
-        public override Task<User> FindByNameAsync(string userName)
-        {
-            //ThrowIfDisposed();
-            if (userName == null)
-            {
-                throw new ArgumentNullException("userName");
-            }
-            userName = NormalizeKey(userName);
-            return Store.FindByNameAsync(userName, CancellationToken.None);
-        }
-
     }
 
     //public class Sms : Microsoft.AspNet.Identity.PhoneNumberTokenProvider<User, string>
@@ -124,19 +107,15 @@ namespace IdentityService.Models
 
     public class RoleManager : RoleManager<Role>
     {
-        private CancellationToken CancellationToken =>  CancellationToken.None;
-        public RoleManager(IRoleStore<Role> store, 
-            IEnumerable<IRoleValidator<Role>> roleValidators, 
-            ILookupNormalizer keyNormalizer, 
-            IdentityErrorDescriber errors, 
-            ILogger<RoleManager<Role>> logger, 
+        private CancellationToken CancellationToken => CancellationToken.None;
+        public RoleManager(IRoleStore<Role> store,
+            IEnumerable<IRoleValidator<Role>> roleValidators,
+            ILookupNormalizer keyNormalizer,
+            IdentityErrorDescriber errors,
+            ILogger<RoleManager<Role>> logger,
             IHttpContextAccessor contextAccessor)
-            : base(store,roleValidators,keyNormalizer,errors,logger,contextAccessor)
+            : base(store, roleValidators, keyNormalizer, errors, logger, contextAccessor)
         {
         }
     }
-
-
-
-
 }

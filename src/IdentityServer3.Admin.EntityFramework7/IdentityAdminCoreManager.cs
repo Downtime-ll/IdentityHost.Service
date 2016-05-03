@@ -46,7 +46,7 @@ using ScopeSecret = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope
 namespace IdentityServer3.Admin.EntityFramework7
 {
     public class IdentityAdminCoreManager<TCLient, TScope, TScopeConfigurationContext, TClientConfigurationContext> : IIdentityAdminService
-        where TCLient : class, IClient<Int16>, new()
+        where TCLient : class, IClient<int>, new()
         //where TClientKey : IEquatable<Guid>
         where TScope : class, IScope<int>, new()
         //where TScopeKey : IEquatable<TScopeKey>

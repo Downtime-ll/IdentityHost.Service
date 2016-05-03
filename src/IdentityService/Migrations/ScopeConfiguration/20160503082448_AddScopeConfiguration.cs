@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
+using Microsoft.Data.Entity.Metadata;
 
 namespace IdentityService.Migrations.ScopeConfiguration
 {
-    public partial class AddScopeModels : Migration
+    public partial class AddScopeConfiguration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +13,8 @@ namespace IdentityService.Migrations.ScopeConfiguration
                 name: "Scopes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ClaimsRule = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     DisplayName = table.Column<string>(nullable: true),
@@ -26,23 +28,24 @@ namespace IdentityService.Migrations.ScopeConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Scope<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_Scope<int>", x => x.Id);
                 });
             migrationBuilder.CreateTable(
                 name: "ScopeClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AlwaysIncludeInIdToken = table.Column<bool>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    ScopeId = table.Column<Guid>(nullable: true)
+                    ScopeId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScopeClaim<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ScopeClaim<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScopeClaim<Guid>_Scope<Guid>_ScopeId",
+                        name: "FK_ScopeClaim<int>_Scope<int>_ScopeId",
                         column: x => x.ScopeId,
                         principalTable: "Scopes",
                         principalColumn: "Id",
@@ -52,18 +55,19 @@ namespace IdentityService.Migrations.ScopeConfiguration
                 name: "ScopeSecrets",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: true),
                     Expiration = table.Column<DateTime>(nullable: true),
-                    ScopeId = table.Column<Guid>(nullable: true),
+                    ScopeId = table.Column<int>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     Value = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScopeSecret<Guid>", x => x.Id);
+                    table.PrimaryKey("PK_ScopeSecret<int>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScopeSecret<Guid>_Scope<Guid>_ScopeId",
+                        name: "FK_ScopeSecret<int>_Scope<int>_ScopeId",
                         column: x => x.ScopeId,
                         principalTable: "Scopes",
                         principalColumn: "Id",
