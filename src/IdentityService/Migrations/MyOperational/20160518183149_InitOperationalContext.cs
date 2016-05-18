@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace IdentityService.Migrations
+namespace IdentityService.Migrations.MyOperational
 {
-    public partial class AddOperationalModels : Migration
+    public partial class InitOperationalContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,8 +18,9 @@ namespace IdentityService.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Consent", x => new { x.SubjectId, x.ClientId });
+                    table.PrimaryKey("PK_Consents", x => new { x.SubjectId, x.ClientId });
                 });
+
             migrationBuilder.CreateTable(
                 name: "Tokens",
                 columns: table => new
@@ -33,14 +34,17 @@ namespace IdentityService.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Token", x => new { x.Key, x.TokenType });
+                    table.PrimaryKey("PK_Tokens", x => new { x.Key, x.TokenType });
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("Consents");
-            migrationBuilder.DropTable("Tokens");
+            migrationBuilder.DropTable(
+                name: "Consents");
+
+            migrationBuilder.DropTable(
+                name: "Tokens");
         }
     }
 }

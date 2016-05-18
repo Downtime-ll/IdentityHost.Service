@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
-using Microsoft.Data.Entity.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace IdentityService.Migrations.ScopeConfiguration
 {
-    public partial class AddScopeConfiguration : Migration
+    public partial class InitScopeConfigurationContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,8 +28,9 @@ namespace IdentityService.Migrations.ScopeConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Scope<int>", x => x.Id);
+                    table.PrimaryKey("PK_Scopes", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ScopeClaims",
                 columns: table => new
@@ -43,14 +44,15 @@ namespace IdentityService.Migrations.ScopeConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScopeClaim<int>", x => x.Id);
+                    table.PrimaryKey("PK_ScopeClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScopeClaim<int>_Scope<int>_ScopeId",
+                        name: "FK_ScopeClaims_Scopes_ScopeId",
                         column: x => x.ScopeId,
                         principalTable: "Scopes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ScopeSecrets",
                 columns: table => new
@@ -65,21 +67,36 @@ namespace IdentityService.Migrations.ScopeConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScopeSecret<int>", x => x.Id);
+                    table.PrimaryKey("PK_ScopeSecrets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScopeSecret<int>_Scope<int>_ScopeId",
+                        name: "FK_ScopeSecrets_Scopes_ScopeId",
                         column: x => x.ScopeId,
                         principalTable: "Scopes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScopeClaims_ScopeId",
+                table: "ScopeClaims",
+                column: "ScopeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScopeSecrets_ScopeId",
+                table: "ScopeSecrets",
+                column: "ScopeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("ScopeClaims");
-            migrationBuilder.DropTable("ScopeSecrets");
-            migrationBuilder.DropTable("Scopes");
+            migrationBuilder.DropTable(
+                name: "ScopeClaims");
+
+            migrationBuilder.DropTable(
+                name: "ScopeSecrets");
+
+            migrationBuilder.DropTable(
+                name: "Scopes");
         }
     }
 }

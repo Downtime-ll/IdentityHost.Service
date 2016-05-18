@@ -1,8 +1,8 @@
-using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using IdentityService.Models;
 
 namespace IdentityService.Migrations.ScopeConfiguration
@@ -13,10 +13,10 @@ namespace IdentityService.Migrations.ScopeConfiguration
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.Scope<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -48,10 +48,10 @@ namespace IdentityService.Migrations.ScopeConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "Scopes");
+                    b.ToTable("Scopes");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeClaim<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -69,10 +69,12 @@ namespace IdentityService.Migrations.ScopeConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ScopeClaims");
+                    b.HasIndex("ScopeId");
+
+                    b.ToTable("ScopeClaims");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeSecret<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -93,21 +95,25 @@ namespace IdentityService.Migrations.ScopeConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ScopeSecrets");
+                    b.HasIndex("ScopeId");
+
+                    b.ToTable("ScopeSecrets");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeClaim<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Scope<int>")
                         .WithMany()
-                        .HasForeignKey("ScopeId");
+                        .HasForeignKey("ScopeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeSecret<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Scope<int>")
                         .WithMany()
-                        .HasForeignKey("ScopeId");
+                        .HasForeignKey("ScopeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

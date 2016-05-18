@@ -28,20 +28,20 @@ using IdentityAdmin.Extensions;
 using IdentityServer3.Admin.EntityFramework7.Entities;
 using IdentityServer3.Admin.EntityFramework7.Interfaces;
 using IdentityServer3.Core.Models;
-using Microsoft.Data.Entity;
-using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
-using TwentyTwenty.IdentityServer3.EntityFramework7.Entities;
-using Client = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>;
-using Scope = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Scope<int>;
-using ScopeClaim = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeClaim<int>;
-using ClientClaim = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientClaim<int>;
-using ClientSecret = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<int>;
-using ClientPostLogoutRedirectUri = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientPostLogoutRedirectUri<int>;
-using ClientRedirectUri = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientRedirectUri<int>;
-using ClientCorsOrigin = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCorsOrigin<int>;
-using ClientCustomGrantType = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<int>;
-using ClientScope = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientScope<int>;
-using ScopeSecret = TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ScopeSecret<int>;
+using IdentityServer3.EntityFrameworkCore.DbContexts;
+using IdentityServer3.EntityFrameworkCore.Entities;
+using Client = IdentityServer3.EntityFrameworkCore.Entities.Client<int>;
+using Scope = IdentityServer3.EntityFrameworkCore.Entities.Scope<int>;
+using ScopeClaim = IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim<int>;
+using ClientClaim = IdentityServer3.EntityFrameworkCore.Entities.ClientClaim<int>;
+using ClientSecret = IdentityServer3.EntityFrameworkCore.Entities.ClientSecret<int>;
+using ClientPostLogoutRedirectUri = IdentityServer3.EntityFrameworkCore.Entities.ClientPostLogoutRedirectUri<int>;
+using ClientRedirectUri = IdentityServer3.EntityFrameworkCore.Entities.ClientRedirectUri<int>;
+using ClientCorsOrigin = IdentityServer3.EntityFrameworkCore.Entities.ClientCorsOrigin<int>;
+using ClientCustomGrantType = IdentityServer3.EntityFrameworkCore.Entities.ClientCustomGrantType<int>;
+using ClientScope = IdentityServer3.EntityFrameworkCore.Entities.ClientScope<int>;
+using ScopeSecret = IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret<int>;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer3.Admin.EntityFramework7
 {

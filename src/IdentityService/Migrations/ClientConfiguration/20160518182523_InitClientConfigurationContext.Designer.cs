@@ -1,23 +1,23 @@
-using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using IdentityService.Models;
 
 namespace IdentityService.Migrations.ClientConfiguration
 {
     [DbContext(typeof(ClientConfigurationContext))]
-    [Migration("20160503082417_AddClientConfigurationModels")]
-    partial class AddClientConfigurationModels
+    [Migration("20160518182523_InitClientConfigurationContext")]
+    partial class InitClientConfigurationContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.Client<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -84,10 +84,10 @@ namespace IdentityService.Migrations.ClientConfiguration
                     b.HasIndex("ClientId")
                         .IsUnique();
 
-                    b.HasAnnotation("Relational:TableName", "Clients");
+                    b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientClaim<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -104,10 +104,12 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientClaims");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientClaims");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCorsOrigin<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientCorsOrigin<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -121,10 +123,12 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientCorsOrigins");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientCorsOrigins");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientCustomGrantType<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -138,10 +142,12 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientCustomGrantTypes");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientCustomGrantTypes");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientPostLogoutRedirectUri<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientPostLogoutRedirectUri<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -155,10 +161,12 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientPostLogoutRedirectUris");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientPostLogoutRedirectUris");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientProviderRestriction<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientProviderRestriction<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -172,10 +180,12 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientProviderRestrictions");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientProviderRestrictions");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientRedirectUri<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientRedirectUri<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -189,10 +199,12 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientRedirectUris");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientRedirectUris");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientScope<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientScope<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -206,10 +218,12 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientScopes");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientScopes");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientSecret<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -231,63 +245,72 @@ namespace IdentityService.Migrations.ClientConfiguration
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "ClientSecrets");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientSecrets");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientClaim<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientClaim<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
                         .HasForeignKey("ClientId");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCorsOrigin<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientCorsOrigin<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientCustomGrantType<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientPostLogoutRedirectUri<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientPostLogoutRedirectUri<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientProviderRestriction<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientProviderRestriction<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientRedirectUri<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientRedirectUri<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientScope<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientScope<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ClientSecret<int>", b =>
                 {
-                    b.HasOne("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Client<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Client<int>")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

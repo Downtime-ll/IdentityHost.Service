@@ -5,14 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer3.Admin.EntityFramework7;
 using IdentityServer3.Admin.EntityFramework7.Entities;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
-using Microsoft.Data.Entity;
-using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using IdentityServer3.EntityFrameworkCore.DbContexts;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace IdentityService.Models
 {
@@ -26,7 +26,7 @@ namespace IdentityService.Models
 
     public class IdentityContext : IdentityDbContext<User, Role, string>
     {
-        public IdentityContext(DbContextOptions options)
+        public IdentityContext(DbContextOptions<IdentityContext> options)
             : base(options)
         {
         }
@@ -51,16 +51,23 @@ namespace IdentityService.Models
 
     public class ClientConfigurationContext : ClientConfigurationContext<int>
     {
-        public ClientConfigurationContext(DbContextOptions options)
+        public ClientConfigurationContext(DbContextOptions<ClientConfigurationContext> options)
             : base(options)
         { }
     }
 
     public class ScopeConfigurationContext : ScopeConfigurationContext<int>
     {
-        public ScopeConfigurationContext(DbContextOptions options)
+        public ScopeConfigurationContext(DbContextOptions<ScopeConfigurationContext> options)
             : base(options)
         { }
+    }
+
+    public class MyOperationalContext : OperationalContext
+    {
+        public MyOperationalContext(DbContextOptions<MyOperationalContext> options) : base(options)
+        {
+        }
     }
 
     public class IdentityAdminManagerService : IdentityAdminCoreManager<IdentityClient, IdentityScope, ScopeConfigurationContext, ClientConfigurationContext>
@@ -80,9 +87,8 @@ namespace IdentityService.Models
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             IServiceProvider services,
-            ILogger<UserManager<User>> logger,
-            IHttpContextAccessor contextAccessor)
-            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger, contextAccessor)
+            ILogger<UserManager<User>> logger)
+            : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
         }
     }

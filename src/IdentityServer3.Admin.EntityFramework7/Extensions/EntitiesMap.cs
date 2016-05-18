@@ -18,7 +18,7 @@ using System.Security.Claims;
 using System.Linq;
 using AutoMapper;
 using IdentityServer3.Admin.EntityFramework7.Entities;
-using TwentyTwenty.IdentityServer3.EntityFramework7.Entities;
+using IdentityServer3.EntityFrameworkCore.Entities;
 
 namespace IdentityServer3.Admin.EntityFramework7.Extensions
 {
@@ -35,7 +35,7 @@ namespace IdentityServer3.Admin.EntityFramework7.Extensions
                 cfg.CreateMap<ScopeSecret<int>, IdentityServer3.Core.Models.Secret>(MemberList.Destination)
                     .ForMember(dest => dest.Type, opt => opt.Condition(srs => !srs.IsSourceValueNull));
 
-                cfg.CreateMap<TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientSecret<int>, IdentityServer3.Core.Models.Secret>(MemberList.Destination)
+                cfg.CreateMap<ClientSecret<int>, IdentityServer3.Core.Models.Secret>(MemberList.Destination)
                      .ForMember(dest => dest.Type, opt => opt.Condition(srs => !srs.IsSourceValueNull));
                 cfg.CreateMap<IdentityClient, IdentityServer3.Core.Models.Client>(MemberList.Destination)
                     .ForMember(x => x.UpdateAccessTokenClaimsOnRefresh, opt => opt.MapFrom(src => src.UpdateAccessTokenOnRefresh))

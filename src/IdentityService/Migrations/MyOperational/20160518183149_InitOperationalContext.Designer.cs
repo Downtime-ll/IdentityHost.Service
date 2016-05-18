@@ -1,23 +1,23 @@
-using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
-using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using IdentityService.Models;
 
-namespace IdentityService.Migrations
+namespace IdentityService.Migrations.MyOperational
 {
-    [DbContext(typeof(OperationalContext))]
-    [Migration("20160502112815_AddOperationalModels")]
-    partial class AddOperationalModels
+    [DbContext(typeof(MyOperationalContext))]
+    [Migration("20160518183149_InitOperationalContext")]
+    partial class InitOperationalContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Consent", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.Consent", b =>
                 {
                     b.Property<string>("SubjectId")
                         .HasAnnotation("MaxLength", 200);
@@ -31,10 +31,10 @@ namespace IdentityService.Migrations
 
                     b.HasKey("SubjectId", "ClientId");
 
-                    b.HasAnnotation("Relational:TableName", "Consents");
+                    b.ToTable("Consents");
                 });
 
-            modelBuilder.Entity("TwentyTwenty.IdentityServer3.EntityFramework7.Entities.Token", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.Token", b =>
                 {
                     b.Property<string>("Key");
 
@@ -54,7 +54,7 @@ namespace IdentityService.Migrations
 
                     b.HasKey("Key", "TokenType");
 
-                    b.HasAnnotation("Relational:TableName", "Tokens");
+                    b.ToTable("Tokens");
                 });
         }
     }

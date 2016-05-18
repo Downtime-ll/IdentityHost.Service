@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -10,21 +8,21 @@ using IdentityAdmin.Core;
 using IdentityServer3.Core.Configuration;
 using IdentityService.Models;
 using IdentityService.Services;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Data.Entity;
 using Serilog;
-using TwentyTwenty.IdentityServer3.EntityFramework7.DbContexts;
-using IdentityAdmin.Configuration;
-using Owin;
 
 
 using DataProtectionProviderDelegate = System.Func<string[], System.Tuple<System.Func<byte[], byte[]>, System.Func<byte[], byte[]>>>;
 using DataProtectionTuple = System.Tuple<System.Func<byte[], byte[]>, System.Func<byte[], byte[]>>;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
+using IdentityServer3.EntityFrameworkCore.DbContexts;
+using Microsoft.AspNetCore.Identity;
+using System.IO;
 
 namespace IdentityService
 {
@@ -48,11 +46,10 @@ namespace IdentityService
 
             string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddEntityFramework()
-                .AddSqlServer()
                 .AddDbContext<IdentityContext>(options => options.UseSqlServer(connectionString))
                 .AddDbContext<ClientConfigurationContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<ScopeConfigurationContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<OperationalContext>(o => o.UseSqlServer(connectionString));
+                .AddDbContext<MyOperationalContext>(o => o.UseSqlServer(connectionString));
         }
 
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -77,10 +74,7 @@ namespace IdentityService
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseIISPlatformHandler();
-
             app.UseStaticFiles();
-
             app.UseMvc();
 
 
@@ -101,7 +95,7 @@ namespace IdentityService
                     {
                         var builder = new Microsoft.Owin.Builder.AppBuilder();
                         var provider =
-                            app.ApplicationServices.GetRequiredService<Microsoft.AspNet.DataProtection.IDataProtectionProvider>();
+                            app.ApplicationServices.GetRequiredService<Microsoft.AspNetCore.DataProtection.IDataProtectionProvider>();
 
                         builder.Properties["security.DataProtectionProvider"] =
                             new DataProtectionProviderDelegate(purposes =>
@@ -110,7 +104,7 @@ namespace IdentityService
                                 return new DataProtectionTuple(dataProtection.Protect, dataProtection.Unprotect);
                             });
 
-                        builder.UseIdentityAdmin(new IdentityAdminOptions
+                        Owin.IdentityAdminAppBuilderExtensions.UseIdentityAdmin(builder,new IdentityAdminOptions
                         {
                             Factory = factory,
                             AdminSecurityConfiguration = {RequireSsl = false}
@@ -144,7 +138,7 @@ namespace IdentityService
                     RequireSsl = false,
                     SigningCertificate = new X509Certificate2(certFile, "idsrv3test"),
                 };
-                config.UseIdentityServer(idsrvOptions);
+                config.UseIdentityServer3(idsrvOptions);
             });
 
             await SampleData.InitializeIdentityDatabaseAsync(app.ApplicationServices);
@@ -207,7 +201,16 @@ namespace IdentityService
             }
         }
 
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+        public static void Main(string[] args)
+        {
+            var host = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
+        }
     }
 }

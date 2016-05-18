@@ -7,8 +7,7 @@
   "Data": {
     "DefaultConnection": {
       // Use a shared (and running) LocalDB database when executing in IIS e.g.
-      // "Server=.;Database=MusicStore;Trusted_Connection=False;MultipleActiveResultSets=true;User ID=iis_login;Password=********"
-      "Connectionstring": "Server=.;Database=MusicStore;Trusted_Connection=False;MultipleActiveResultSets=true;User ID=sa;Password=123"
+      "Connectionstring": "Data Source=.\\SQLEXPRESS;Initial Catalog=ProjectDb;Persist Security Info=True;User ID=sa;Password=123;Pooling=False"
     }
   }
 }

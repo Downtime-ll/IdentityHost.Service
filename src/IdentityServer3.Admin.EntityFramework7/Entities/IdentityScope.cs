@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using IdentityServer3.Admin.EntityFramework7.Interfaces;
 using IdentityServer3.Core.Models;
-using TwentyTwenty.IdentityServer3.EntityFramework7.Entities;
+using IdentityServer3.EntityFrameworkCore.Entities;
 
 namespace IdentityServer3.Admin.EntityFramework7.Entities
 {

@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
-using Microsoft.Data.Entity.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace IdentityService.Migrations.ClientConfiguration
 {
-    public partial class AddClientConfigurationModels : Migration
+    public partial class InitClientConfigurationContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,8 +44,9 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Client<int>", x => x.Id);
+                    table.PrimaryKey("PK_Clients", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientClaims",
                 columns: table => new
@@ -58,14 +59,15 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientClaim<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientClaim<int>_Client<int>_ClientId",
+                        name: "FK_ClientClaims_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientCorsOrigins",
                 columns: table => new
@@ -77,14 +79,15 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientCorsOrigin<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientCorsOrigins", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientCorsOrigin<int>_Client<int>_ClientId",
+                        name: "FK_ClientCorsOrigins_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientCustomGrantTypes",
                 columns: table => new
@@ -96,14 +99,15 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientCustomGrantType<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientCustomGrantTypes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientCustomGrantType<int>_Client<int>_ClientId",
+                        name: "FK_ClientCustomGrantTypes_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientPostLogoutRedirectUris",
                 columns: table => new
@@ -115,14 +119,15 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientPostLogoutRedirectUri<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientPostLogoutRedirectUris", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientPostLogoutRedirectUri<int>_Client<int>_ClientId",
+                        name: "FK_ClientPostLogoutRedirectUris_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientProviderRestrictions",
                 columns: table => new
@@ -134,14 +139,15 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientProviderRestriction<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientProviderRestrictions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientProviderRestriction<int>_Client<int>_ClientId",
+                        name: "FK_ClientProviderRestrictions_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientRedirectUris",
                 columns: table => new
@@ -153,14 +159,15 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientRedirectUri<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientRedirectUris", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientRedirectUri<int>_Client<int>_ClientId",
+                        name: "FK_ClientRedirectUris_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientScopes",
                 columns: table => new
@@ -172,14 +179,15 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientScope<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientScopes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientScope<int>_Client<int>_ClientId",
+                        name: "FK_ClientScopes_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "ClientSecrets",
                 columns: table => new
@@ -194,32 +202,90 @@ namespace IdentityService.Migrations.ClientConfiguration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientSecret<int>", x => x.Id);
+                    table.PrimaryKey("PK_ClientSecrets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientSecret<int>_Client<int>_ClientId",
+                        name: "FK_ClientSecrets_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Client<int>_ClientId",
+                name: "IX_Clients_ClientId",
                 table: "Clients",
                 column: "ClientId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientClaims_ClientId",
+                table: "ClientClaims",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientCorsOrigins_ClientId",
+                table: "ClientCorsOrigins",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientCustomGrantTypes_ClientId",
+                table: "ClientCustomGrantTypes",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientPostLogoutRedirectUris_ClientId",
+                table: "ClientPostLogoutRedirectUris",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientProviderRestrictions_ClientId",
+                table: "ClientProviderRestrictions",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientRedirectUris_ClientId",
+                table: "ClientRedirectUris",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientScopes_ClientId",
+                table: "ClientScopes",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientSecrets_ClientId",
+                table: "ClientSecrets",
+                column: "ClientId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("ClientClaims");
-            migrationBuilder.DropTable("ClientCorsOrigins");
-            migrationBuilder.DropTable("ClientCustomGrantTypes");
-            migrationBuilder.DropTable("ClientPostLogoutRedirectUris");
-            migrationBuilder.DropTable("ClientProviderRestrictions");
-            migrationBuilder.DropTable("ClientRedirectUris");
-            migrationBuilder.DropTable("ClientScopes");
-            migrationBuilder.DropTable("ClientSecrets");
-            migrationBuilder.DropTable("Clients");
+            migrationBuilder.DropTable(
+                name: "ClientClaims");
+
+            migrationBuilder.DropTable(
+                name: "ClientCorsOrigins");
+
+            migrationBuilder.DropTable(
+                name: "ClientCustomGrantTypes");
+
+            migrationBuilder.DropTable(
+                name: "ClientPostLogoutRedirectUris");
+
+            migrationBuilder.DropTable(
+                name: "ClientProviderRestrictions");
+
+            migrationBuilder.DropTable(
+                name: "ClientRedirectUris");
+
+            migrationBuilder.DropTable(
+                name: "ClientScopes");
+
+            migrationBuilder.DropTable(
+                name: "ClientSecrets");
+
+            migrationBuilder.DropTable(
+                name: "Clients");
         }
     }
 }

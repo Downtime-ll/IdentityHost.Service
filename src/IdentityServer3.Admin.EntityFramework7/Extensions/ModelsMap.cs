@@ -20,7 +20,7 @@ using System.Security.Claims;
 using AutoMapper;
 using IdentityServer3.Admin.EntityFramework7.Entities;
 using IdentityServer3.Core.Models;
-using TwentyTwenty.IdentityServer3.EntityFramework7.Entities;
+using IdentityServer3.EntityFrameworkCore.Entities;
 
 namespace IdentityServer3.Admin.EntityFramework7.Extensions
 {
@@ -40,7 +40,7 @@ namespace IdentityServer3.Admin.EntityFramework7.Extensions
                 cfg.CreateMap<Client, IdentityClient>(MemberList.Source)
                     .ForMember(x => x.UpdateAccessTokenOnRefresh, opt => opt.MapFrom(src => src.UpdateAccessTokenClaimsOnRefresh))
                     .ForMember(x => x.AllowAccessToAllGrantTypes, opt => opt.MapFrom(src => src.AllowAccessToAllCustomGrantTypes))
-                    .ForMember(x => x.AllowedCustomGrantTypes, opt => opt.MapFrom(src => src.AllowedCustomGrantTypes.Select(x => new TwentyTwenty.IdentityServer3.EntityFramework7.Entities.ClientCustomGrantType<int> { GrantType = x })))
+                    .ForMember(x => x.AllowedCustomGrantTypes, opt => opt.MapFrom(src => src.AllowedCustomGrantTypes.Select(x => new ClientCustomGrantType<int> { GrantType = x })))
                     .ForMember(x => x.RedirectUris, opt => opt.MapFrom(src => src.RedirectUris.Select(x => new ClientRedirectUri<int> { Uri = x })))
                     .ForMember(x => x.PostLogoutRedirectUris, opt => opt.MapFrom(src => src.PostLogoutRedirectUris.Select(x => new ClientPostLogoutRedirectUri<int> { Uri = x })))
                     .ForMember(x => x.IdentityProviderRestrictions, opt => opt.MapFrom(src => src.IdentityProviderRestrictions.Select(x => new ClientIdPRestriction { Provider = x })))
