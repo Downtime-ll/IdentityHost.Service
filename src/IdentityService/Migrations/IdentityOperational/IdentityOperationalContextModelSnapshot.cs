@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using IdentityService.Models;
 
-namespace IdentityService.Migrations.MyOperational
+namespace IdentityService.Migrations.IdentityOperational
 {
-    [DbContext(typeof(MyOperationalContext))]
-    partial class MyOperationalContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(IdentityOperationalContext))]
+    partial class IdentityOperationalContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

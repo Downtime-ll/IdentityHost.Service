@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using IdentityService.Models;
 
-namespace IdentityService.Migrations.MyOperational
+namespace IdentityService.Migrations.IdentityOperational
 {
-    [DbContext(typeof(MyOperationalContext))]
-    [Migration("20160518183149_InitOperationalContext")]
+    [DbContext(typeof(IdentityOperationalContext))]
+    [Migration("20160522122116_InitOperationalContext")]
     partial class InitOperationalContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

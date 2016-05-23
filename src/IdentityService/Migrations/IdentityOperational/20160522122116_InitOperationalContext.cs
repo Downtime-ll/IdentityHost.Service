@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace IdentityService.Migrations.MyOperational
+namespace IdentityService.Migrations.IdentityOperational
 {
     public partial class InitOperationalContext : Migration
     {

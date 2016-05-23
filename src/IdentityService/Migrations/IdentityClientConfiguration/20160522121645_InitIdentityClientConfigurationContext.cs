@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace IdentityService.Migrations.ClientConfiguration
+namespace IdentityService.Migrations.IdentityClientConfiguration
 {
-    public partial class InitClientConfigurationContext : Migration
+    public partial class InitIdentityClientConfigurationContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -109,26 +109,6 @@ namespace IdentityService.Migrations.ClientConfiguration
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientPostLogoutRedirectUris",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientId = table.Column<int>(nullable: false),
-                    Uri = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ClientPostLogoutRedirectUris", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ClientPostLogoutRedirectUris_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ClientProviderRestrictions",
                 columns: table => new
                 {
@@ -142,6 +122,26 @@ namespace IdentityService.Migrations.ClientConfiguration
                     table.PrimaryKey("PK_ClientProviderRestrictions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ClientProviderRestrictions_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClientPostLogoutRedirectUris",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
+                    Uri = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientPostLogoutRedirectUris", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ClientPostLogoutRedirectUris_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
@@ -233,13 +233,13 @@ namespace IdentityService.Migrations.ClientConfiguration
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientPostLogoutRedirectUris_ClientId",
-                table: "ClientPostLogoutRedirectUris",
+                name: "IX_ClientProviderRestrictions_ClientId",
+                table: "ClientProviderRestrictions",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientProviderRestrictions_ClientId",
-                table: "ClientProviderRestrictions",
+                name: "IX_ClientPostLogoutRedirectUris_ClientId",
+                table: "ClientPostLogoutRedirectUris",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
@@ -270,10 +270,10 @@ namespace IdentityService.Migrations.ClientConfiguration
                 name: "ClientCustomGrantTypes");
 
             migrationBuilder.DropTable(
-                name: "ClientPostLogoutRedirectUris");
+                name: "ClientProviderRestrictions");
 
             migrationBuilder.DropTable(
-                name: "ClientProviderRestrictions");
+                name: "ClientPostLogoutRedirectUris");
 
             migrationBuilder.DropTable(
                 name: "ClientRedirectUris");

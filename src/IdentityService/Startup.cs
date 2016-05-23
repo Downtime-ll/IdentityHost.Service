@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using IdentityAdmin.Configuration;
-using IdentityAdmin.Core;
 using IdentityServer3.Core.Configuration;
 using IdentityService.Models;
 using IdentityService.Services;
@@ -20,9 +17,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
-using IdentityServer3.EntityFrameworkCore.DbContexts;
-using Microsoft.AspNetCore.Identity;
 using System.IO;
+using System.Threading.Tasks;
+using IdentityAdmin.Configuration;
+using IdentityAdmin.Core;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.EntityFrameworkCore.DbContexts;
+using IdentityService.Migrations;
+using IdentityServer3.EntityFrameworkCore.Extensions;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace IdentityService
 {
@@ -46,10 +49,16 @@ namespace IdentityService
 
             string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddEntityFramework()
+                .AddDbContext<NullDbContext>(options => options.UseSqlServer(connectionString))
                 .AddDbContext<IdentityContext>(options => options.UseSqlServer(connectionString))
-                .AddDbContext<ClientConfigurationContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<ScopeConfigurationContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<MyOperationalContext>(o => o.UseSqlServer(connectionString));
+                .AddDbContext<IdentityClientConfigurationContext>(o => o.UseSqlServer(connectionString))
+                .AddDbContext<IdentityScopeConfigurationContext>(o => o.UseSqlServer(connectionString))
+                
+                .AddDbContext<IdentityOperationalContext>(o => o.UseSqlServer(connectionString));
+
+            services.AddScoped<OperationalContext, IdentityOperationalContext>();
+            services.AddScoped<ClientConfigurationContext, IdentityClientConfigurationContext>();
+            services.AddScoped<ScopeConfigurationContext, IdentityScopeConfigurationContext>();
         }
 
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -60,15 +69,37 @@ namespace IdentityService
                 .CreateLogger();
 
 
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
 
-            //app.UseJwtBearerAuthentication(options =>
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions()
+            {
+                AuthenticationScheme = "Oidc",
+                SignInScheme = "Cookies",
+                RequireHttpsMetadata = false,
+                Authority = "http://localhost:58319/core",
+                ClientId = "idmgr_and_idadmin",
+                UseTokenLifetime = false,
+                Scope = { "openid","idmgr","idAdmin"},
+                AutomaticChallenge = true,
+                ResponseType = "id_token",
+                Events = new OpenIdConnectEvents()
+                {
+                    OnRedirectToIdentityProvider = context =>
+                    {
+                        
+                        return Task.FromResult(0);
+                    }
+                }
+            });
+
+            //app.UseJwtBearerAuthentication(new JwtBearerOptions()
             //{
-            //    options.Authority = "http://192.168.1.111:5005/core";
-            //    options.RequireHttpsMetadata = false;
 
-            //    options.Audience = "http://192.168.1.111:5005/core/resources";
-            //    options.AutomaticAuthenticate = true;
+            //    Authority = "http://localhost:58319/core",
+            //    RequireHttpsMetadata = false,
+
+            //    Audience = "http://localhost:58319/resources",
+            //    AutomaticAuthenticate = true
             //});
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -81,6 +112,7 @@ namespace IdentityService
             app.UseDatabaseErrorPage();
             app.UseDeveloperExceptionPage();
 
+           
             app.Map("/adm", adminApp =>
             {
                 var factory = new IdentityAdminServiceFactory();
@@ -104,14 +136,16 @@ namespace IdentityService
                                 return new DataProtectionTuple(dataProtection.Protect, dataProtection.Unprotect);
                             });
 
-                        Owin.IdentityAdminAppBuilderExtensions.UseIdentityAdmin(builder,new IdentityAdminOptions
+                        var options = new IdentityAdminOptions
                         {
                             Factory = factory,
-                            AdminSecurityConfiguration = {RequireSsl = false}
-                        });
+                            AdminSecurityConfiguration = new AdminHostSecurityConfiguration() {RequireSsl = false,AdminRoleName = "IdentityServerAdmin", HostAuthenticationType = IdentityAdmin.Constants.BearerAuthenticationType }
+                        };
+
+                        Owin.IdentityAdminAppBuilderExtensions.UseIdentityAdmin(builder, options);
 
                         var appFunc =
-                            builder.Build(typeof (Func<IDictionary<string, object>, Task>)) as
+                            builder.Build(typeof(Func<IDictionary<string, object>, Task>)) as
                                 Func<IDictionary<string, object>, Task>;
                         return appFunc;
                     });
@@ -125,10 +159,11 @@ namespace IdentityService
                 var factory = new IdentityServerServiceFactory()
                     .UseAspNetCoreIdentity(config);
 
+
                 factory.ConfigureEntityFramework(app.ApplicationServices)
                     .RegisterOperationalStores()
-                    .RegisterClientStore<int, ClientConfigurationContext>()
-                    .RegisterScopeStore<int, ScopeConfigurationContext>();
+                    .RegisterClientStore<IdentityClientConfigurationContext>()
+                    .RegisterScopeStore<IdentityScopeConfigurationContext>();
               
 
                 var certFile = env.WebRootPath + $"{System.IO.Path.DirectorySeparatorChar}idsrv3test.pfx";
@@ -141,64 +176,8 @@ namespace IdentityService
                 config.UseIdentityServer3(idsrvOptions);
             });
 
-            await SampleData.InitializeIdentityDatabaseAsync(app.ApplicationServices);
-
-        }
-
-        public static class SampleData
-        {
-            public static async Task InitializeIdentityDatabaseAsync(IServiceProvider serviceProvider)
-            {
-                using (var service = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
-                {
-
-                    using (var db = service.ServiceProvider.GetRequiredService<IdentityContext>())
-                    {
-                        await db.Database.EnsureDeletedAsync();
-
-                        await db.Database.MigrateAsync();
-                        {
-                            await CreateAdminUser(serviceProvider);
-                        }
-                    }
-
-                    using (var db = service.ServiceProvider.GetRequiredService<ClientConfigurationContext>())
-                    {
-                        await db.Database.MigrateAsync();
-                    }
-
-                    using (var db = service.ServiceProvider.GetRequiredService<ScopeConfigurationContext>())
-                    {
-                        await db.Database.MigrateAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Creates a store manager user who can manage the inventory.
-            /// </summary>
-            /// <param name="serviceProvider"></param>
-            /// <returns></returns>
-            private static async Task CreateAdminUser(IServiceProvider serviceProvider)
-            {
-                const string adminRole = "admin";
-
-                var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-                var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
-                if (!await roleManager.RoleExistsAsync(adminRole))
-                {
-                    await roleManager.CreateAsync(new Role() {Name= adminRole });
-                }
-
-                var user = await userManager.FindByNameAsync("admin");
-                if (user == null)
-                {
-                    user = new User { UserName = "admin", };
-                    await userManager.CreateAsync(user, "YouShouldChangeThisPassword1!");
-                    await userManager.AddToRoleAsync(user, adminRole);
-                    await userManager.AddClaimAsync(user, new Claim("ManageStore", "Allowed"));
-                }
-            }
+            //初始化数据
+            app.ApplicationServices.SendData();
         }
 
         public static void Main(string[] args)

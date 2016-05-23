@@ -1,71 +1,45 @@
-﻿/*
- * Copyright 2015 Bert Hoorne,Dominick Baier, Brock Allen
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using IdentityAdmin.Core;
 using IdentityAdmin.Core.Client;
 using IdentityAdmin.Core.Metadata;
 using IdentityAdmin.Core.Scope;
-using IdentityAdmin.Extensions;
-using IdentityServer3.Admin.EntityFramework7.Entities;
-using IdentityServer3.Admin.EntityFramework7.Interfaces;
 using IdentityServer3.Core.Models;
 using IdentityServer3.EntityFrameworkCore.DbContexts;
 using IdentityServer3.EntityFrameworkCore.Entities;
-using Client = IdentityServer3.EntityFrameworkCore.Entities.Client<int>;
-using Scope = IdentityServer3.EntityFrameworkCore.Entities.Scope<int>;
-using ScopeClaim = IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim<int>;
-using ClientClaim = IdentityServer3.EntityFrameworkCore.Entities.ClientClaim<int>;
-using ClientSecret = IdentityServer3.EntityFrameworkCore.Entities.ClientSecret<int>;
-using ClientPostLogoutRedirectUri = IdentityServer3.EntityFrameworkCore.Entities.ClientPostLogoutRedirectUri<int>;
-using ClientRedirectUri = IdentityServer3.EntityFrameworkCore.Entities.ClientRedirectUri<int>;
-using ClientCorsOrigin = IdentityServer3.EntityFrameworkCore.Entities.ClientCorsOrigin<int>;
-using ClientCustomGrantType = IdentityServer3.EntityFrameworkCore.Entities.ClientCustomGrantType<int>;
-using ClientScope = IdentityServer3.EntityFrameworkCore.Entities.ClientScope<int>;
-using ScopeSecret = IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret<int>;
+using Client = IdentityServer3.EntityFrameworkCore.Entities.Client;
+using Scope = IdentityServer3.EntityFrameworkCore.Entities.Scope;
+using ScopeClaim = IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using IdentityAdmin.Extensions;
 
-namespace IdentityServer3.Admin.EntityFramework7
+namespace IdentityServer3.Admin.EntityFrameworkCore
 {
     public class IdentityAdminCoreManager<TCLient, TScope, TScopeConfigurationContext, TClientConfigurationContext> : IIdentityAdminService
-        where TCLient : class, IClient<int>, new()
-        //where TClientKey : IEquatable<Guid>
-        where TScope : class, IScope<int>, new()
-        //where TScopeKey : IEquatable<TScopeKey>
-        where TScopeConfigurationContext: ScopeConfigurationContext<int>
-        where TClientConfigurationContext: ClientConfigurationContext<int>
+        where TCLient : Client,new()
+        where TScope : Scope,new()
+        where TScopeConfigurationContext: ScopeConfigurationContext
+        where TClientConfigurationContext: ClientConfigurationContext
     {
         private static IMapper _clientMapper;
 
-        private TScopeConfigurationContext _scopeContext;
-        private TClientConfigurationContext _clientContext;
+        private readonly TScopeConfigurationContext _scopeContext;
+        private readonly TClientConfigurationContext _clientContext;
         public IdentityAdminCoreManager(TScopeConfigurationContext scopeContext, TClientConfigurationContext clientContext)
         {
             this._scopeContext = scopeContext;
             this._clientContext = clientContext;
 
 
-            var clientConfig = new MapperConfiguration(cfg => {
-                cfg.CreateMap<IdentityClient, Client>();
-                cfg.CreateMap<Client, IdentityClient>();
+            var clientConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TCLient, Client>();
+                cfg.CreateMap<Client, TCLient>();
                 cfg.CreateMap<ClientClaim, ClientClaimValue>();
                 cfg.CreateMap<ClientClaimValue, ClientClaim>();
                 cfg.CreateMap<ClientSecret, ClientSecretValue>();
@@ -86,8 +60,8 @@ namespace IdentityServer3.Admin.EntityFramework7
                 cfg.CreateMap<ScopeClaimValue, ScopeClaim>();
                 cfg.CreateMap<ScopeSecret, ScopeSecretValue>();
                 cfg.CreateMap<ScopeSecretValue, ScopeSecret>();
-                cfg.CreateMap<IdentityScope, Scope>();
-                cfg.CreateMap<Scope, IdentityScope>();
+                cfg.CreateMap<TScope, Scope>();
+                cfg.CreateMap<Scope, TScope>();
                 cfg.CreateMap<DateTime?, DateTimeOffset?>().ConvertUsing<NullableDateTimeOffsetConverter>();
                 cfg.CreateMap<DateTimeOffset?, DateTime?>().ConvertUsing<NullableOffsetDateTimeConverter>();
             });
@@ -928,7 +902,7 @@ namespace IdentityServer3.Admin.EntityFramework7
                         var existingIdentityProviderRestrictions = client.IdentityProviderRestrictions;
                         if (existingIdentityProviderRestrictions.All(x => x.Provider != provider))
                         {
-                            client.IdentityProviderRestrictions.Add(new ClientProviderRestriction<int>
+                            client.IdentityProviderRestrictions.Add(new ClientIdPRestriction
                             {
                                 Provider = provider,
                             });

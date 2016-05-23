@@ -5,19 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using IdentityService.Models;
 
-namespace IdentityService.Migrations.ScopeConfiguration
+namespace IdentityService.Migrations.IdentityScopeConfiguration
 {
-    [DbContext(typeof(ScopeConfigurationContext))]
-    [Migration("20160518182305_InitScopeConfigurationContext")]
-    partial class InitScopeConfigurationContext
+    [DbContext(typeof(IdentityScopeConfigurationContext))]
+    partial class IdentityScopeConfigurationContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.Scope<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.Scope", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -52,7 +51,7 @@ namespace IdentityService.Migrations.ScopeConfiguration
                     b.ToTable("Scopes");
                 });
 
-            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -75,7 +74,7 @@ namespace IdentityService.Migrations.ScopeConfiguration
                     b.ToTable("ScopeClaims");
                 });
 
-            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -101,17 +100,17 @@ namespace IdentityService.Migrations.ScopeConfiguration
                     b.ToTable("ScopeSecrets");
                 });
 
-            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim", b =>
                 {
-                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Scope<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Scope")
                         .WithMany()
                         .HasForeignKey("ScopeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret<int>", b =>
+            modelBuilder.Entity("IdentityServer3.EntityFrameworkCore.Entities.ScopeSecret", b =>
                 {
-                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Scope<int>")
+                    b.HasOne("IdentityServer3.EntityFrameworkCore.Entities.Scope")
                         .WithMany()
                         .HasForeignKey("ScopeId")
                         .OnDelete(DeleteBehavior.Cascade);

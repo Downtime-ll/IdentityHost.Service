@@ -26,7 +26,14 @@ namespace IdentityService.Services
         public static void AddIdentityUserService<T>(this IServiceCollection serviceCollection) where T :class ,IUserService 
         {
             serviceCollection.AddScoped<IUserService, IdentityUserService>();
-            serviceCollection.AddIdentity<User, Role>();
+            serviceCollection.AddIdentity<User, Role>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            });
             serviceCollection.AddScoped<UserManager<User>, UserManager>();
             serviceCollection.AddScoped<RoleManager<Role>, RoleManager>();
             serviceCollection.AddScoped<IUserStore<User>, IdentityUserStore>();

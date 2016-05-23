@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer3.Admin.EntityFramework7;
-using IdentityServer3.Admin.EntityFramework7.Entities;
+using IdentityServer3.Admin.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +12,7 @@ using IdentityServer3.EntityFrameworkCore.DbContexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using IdentityServer3.EntityFrameworkCore.Entities;
 
 namespace IdentityService.Models
 {
@@ -49,30 +49,40 @@ namespace IdentityService.Models
         }
     }
 
-    public class ClientConfigurationContext : ClientConfigurationContext<int>
+    /// <summary>
+    /// 空数据库，用于创建数据库用
+    /// </summary>
+    public class NullDbContext : DbContext
     {
-        public ClientConfigurationContext(DbContextOptions<ClientConfigurationContext> options)
+        public NullDbContext(DbContextOptions<NullDbContext> options)
             : base(options)
         { }
     }
 
-    public class ScopeConfigurationContext : ScopeConfigurationContext<int>
+    public class IdentityScopeConfigurationContext : ScopeConfigurationContext
     {
-        public ScopeConfigurationContext(DbContextOptions<ScopeConfigurationContext> options)
-            : base(options)
-        { }
-    }
-
-    public class MyOperationalContext : OperationalContext
-    {
-        public MyOperationalContext(DbContextOptions<MyOperationalContext> options) : base(options)
+        public IdentityScopeConfigurationContext(DbContextOptions<IdentityScopeConfigurationContext> options) : base(options)
         {
         }
     }
 
-    public class IdentityAdminManagerService : IdentityAdminCoreManager<IdentityClient, IdentityScope, ScopeConfigurationContext, ClientConfigurationContext>
+    public class IdentityClientConfigurationContext : ClientConfigurationContext
     {
-        public IdentityAdminManagerService(ScopeConfigurationContext scopeContext, ClientConfigurationContext clientContext) : base(scopeContext, clientContext)
+        public IdentityClientConfigurationContext(DbContextOptions<IdentityClientConfigurationContext> options) : base(options)
+        {
+        }
+    }
+
+    public class IdentityOperationalContext : OperationalContext
+    {
+        public IdentityOperationalContext(DbContextOptions<IdentityOperationalContext> options) : base(options)
+        {
+        }
+    }
+
+    public class IdentityAdminManagerService : IdentityAdminCoreManager<Client, Scope, IdentityScopeConfigurationContext, IdentityClientConfigurationContext>
+    {
+        public IdentityAdminManagerService(IdentityScopeConfigurationContext scopeContext, IdentityClientConfigurationContext clientContext) : base(scopeContext, clientContext)
         {
         }
     }
@@ -92,16 +102,6 @@ namespace IdentityService.Models
         {
         }
     }
-
-    //public class Sms : Microsoft.AspNet.Identity.PhoneNumberTokenProvider<User, string>
-    //{
-    //    public override Task<bool> ValidateAsync(string purpose, string token, UserManager<User, string> manager, User user)
-    //    {
-    //        // just hard coding to validate any 2fa token
-    //        return Task.FromResult(true);
-    //        //return base.ValidateAsync(purpose, token, manager, user);
-    //    }
-    //}
 
     public class RoleStore : RoleStore<Role>
     {

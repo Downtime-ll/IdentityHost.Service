@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace IdentityService.Migrations.ScopeConfiguration
+namespace IdentityService.Migrations.IdentityScopeConfiguration
 {
     public partial class InitScopeConfigurationContext : Migration
     {
