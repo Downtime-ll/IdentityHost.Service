@@ -25,6 +25,7 @@
     "Microsoft.Extensions.Logging": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Logging.TraceSource": "1.0.0-rc2-final",
     "IdentityServer3.AspNetCore.Identity": "1.0.0-*",
     "IdentityManager.AspNetCore.Identity": "1.0.0-*",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
@@ -45,9 +46,7 @@
 
   "frameworks": {
     "net452": {
-      "dependencies": {
-       
-      }
+     
     }
   },
 

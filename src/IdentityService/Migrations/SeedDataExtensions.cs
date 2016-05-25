@@ -74,6 +74,8 @@ namespace IdentityService.Migrations
                 user = new User { UserName = "admin", Email = "admin@mail.com", FirstName = "Lyu" };
                 await userManager.CreateAsync(user, "admin");
                 await userManager.AddToRoleAsync(user, adminRole);
+                await userManager.AddToRoleAsync(user, "IdentityServerAdmin");
+                await userManager.AddToRoleAsync(user, "IdentityManagerAdmin");
                 await userManager.AddClaimAsync(user, new Claim("ManageStore", "Allowed"));
             }
         }
@@ -87,13 +89,21 @@ namespace IdentityService.Migrations
                 Enabled = true,
                 Flow = IdentityServer3.Core.Models.Flows.Implicit,
                 RequireConsent = false,
-
+                IdentityTokenLifetime = 3600,
+                AccessTokenLifetime = 3600,
+                EnableLocalLogin = true,
+                RedirectUris = new List<Entitys.ClientRedirectUri>()
+                {
+                    new Entitys.ClientRedirectUri() {Uri = "http://localhost:58319/"},
+                    new Entitys.ClientRedirectUri() {Uri = "http://localhost:58319/adm"},
+                },
                 IdentityProviderRestrictions = new List<Entitys.ClientIdPRestriction>()
                 {
                     new Entitys.ClientIdPRestriction() { Provider = IdentityServer3.Core.Constants.PrimaryAuthenticationType}
                 },
                 AllowedScopes =new List<Entitys.ClientScope>() {
                     new Entitys.ClientScope() {Scope =IdentityServer3.Core.Constants.StandardScopes.OpenId },
+                    new Entitys.ClientScope() {Scope =IdentityServer3.Core.Constants.StandardScopes.Profile },
                     new Entitys.ClientScope() {Scope =IdentityManager.Constants.IdMgrScope },
                     new Entitys.ClientScope() {Scope =IdentityAdmin.Constants.IdAdminScope },
               }
@@ -116,6 +126,7 @@ namespace IdentityService.Migrations
                 DisplayName = "IdentityManager",
                 Description = "Authorization for IdentityManager",
                 Type = 0,
+                Enabled = true,
                 ScopeClaims = new List<Entitys.ScopeClaim>()
                 {
                     new Entitys.ScopeClaim() {Name = Constants.ClaimTypes.Name},
@@ -129,6 +140,7 @@ namespace IdentityService.Migrations
                 DisplayName = "IdentityServer.Admin",
                 Description = "Authorization for IdentityServer.Admin",
                 Type = 0,
+                Enabled = true,
                 ScopeClaims = new List<Entitys.ScopeClaim>()
                 {
                     new Entitys.ScopeClaim() {Name = Constants.ClaimTypes.Name},

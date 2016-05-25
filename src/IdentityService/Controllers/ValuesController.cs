@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IdentityServer3.Core.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityService.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "IdentityServerAdmin")]
     public class ValuesController : Controller
     {
         // GET: api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
+
+            var aa = HttpContext.User.Identity;
             return new string[] { "value1", "value2" };
         }
 

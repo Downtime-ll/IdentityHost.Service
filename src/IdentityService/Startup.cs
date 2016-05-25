@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using System.Diagnostics;
+using System.IdentityModel.Tokens;
+//using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer3.Core.Configuration;
 using IdentityService.Models;
@@ -18,14 +20,22 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using System.IO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityAdmin.Configuration;
 using IdentityAdmin.Core;
 using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.Services;
 using IdentityServer3.EntityFrameworkCore.DbContexts;
 using IdentityService.Migrations;
 using IdentityServer3.EntityFrameworkCore.Extensions;
+using IdentityServer3.EntityFrameworkCore.Stores;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+//using Microsoft.Owin;
+using Microsoft.Owin.Security;
+using Owin;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
 
 namespace IdentityService
 {
@@ -59,40 +69,57 @@ namespace IdentityService
             services.AddScoped<OperationalContext, IdentityOperationalContext>();
             services.AddScoped<ClientConfigurationContext, IdentityClientConfigurationContext>();
             services.AddScoped<ScopeConfigurationContext, IdentityScopeConfigurationContext>();
+
+            services.AddScoped<IClientStore, ClientStore>();
         }
 
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //Log.Logger = new LoggerConfiguration()
+            //    .MinimumLevel.Debug()
+            //    .WriteTo.LiterateConsole()
+            //    .CreateLogger();
+
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.LiterateConsole()
-                .CreateLogger();
+                              .WriteTo.Trace(outputTemplate: "{Timestamp} [{Level}] ({Name}){NewLine} {Message}{NewLine}{Exception}")
+                              .CreateLogger();
+
+            var sourceSwitch = new SourceSwitch("LoggingSample");
+            sourceSwitch.Level = SourceLevels.All;
+            //loggerFactory.AddTraceSource(sourceSwitch,
+            //    new ConsoleTraceListener(false));
+            loggerFactory.AddTraceSource(sourceSwitch,
+                new EventLogTraceListener("Application"));
 
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                AuthenticationScheme = "Cookies",
+                AutomaticAuthenticate = true,
+            });
+
+
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions()
             {
                 AuthenticationScheme = "Oidc",
                 SignInScheme = "Cookies",
                 RequireHttpsMetadata = false,
+                //Authority = "https://localhost:44333/core",
                 Authority = "http://localhost:58319/core",
+                CallbackPath = "/",
+
+                
                 ClientId = "idmgr_and_idadmin",
-                UseTokenLifetime = false,
-                Scope = { "openid","idmgr","idAdmin"},
-                AutomaticChallenge = true,
-                ResponseType = "id_token",
-                Events = new OpenIdConnectEvents()
-                {
-                    OnRedirectToIdentityProvider = context =>
-                    {
-                        
-                        return Task.FromResult(0);
-                    }
-                }
+                UseTokenLifetime = true,
+                Scope = { "openid", "idmgr", "idAdmin" },
+                ResponseType = "id_token"
+               
             });
 
-            //app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            //    app.UseJwtBearerAuthentication(new JwtBearerOptions()
             //{
 
             //    Authority = "http://localhost:58319/core",
@@ -102,8 +129,7 @@ namespace IdentityService
             //    AutomaticAuthenticate = true
             //});
 
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+
 
             app.UseStaticFiles();
             app.UseMvc();
@@ -139,7 +165,7 @@ namespace IdentityService
                         var options = new IdentityAdminOptions
                         {
                             Factory = factory,
-                            AdminSecurityConfiguration = new AdminHostSecurityConfiguration() {RequireSsl = false,AdminRoleName = "IdentityServerAdmin", HostAuthenticationType = IdentityAdmin.Constants.BearerAuthenticationType }
+                            AdminSecurityConfiguration = new AdminHostSecurityConfiguration() {RequireSsl = false,AdminRoleName = "IdentityServerAdmin", HostAuthenticationType = IdentityAdmin.Constants.CookieAuthenticationType }
                         };
 
                         Owin.IdentityAdminAppBuilderExtensions.UseIdentityAdmin(builder, options);
@@ -171,6 +197,7 @@ namespace IdentityService
                 {
                     Factory = factory,
                     RequireSsl = false,
+                    
                     SigningCertificate = new X509Certificate2(certFile, "idsrv3test"),
                 };
                 config.UseIdentityServer3(idsrvOptions);
