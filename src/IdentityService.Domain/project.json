@@ -1,0 +1,16 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Microsoft.AspNetCore.Identity": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0-rc2-final",
+    "FluentValidation": "6.3.4-alpha",
+    "Nature.Core": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "net451": {
+    }
+    
+  }
+}

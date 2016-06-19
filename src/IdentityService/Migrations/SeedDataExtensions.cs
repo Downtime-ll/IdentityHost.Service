@@ -13,6 +13,8 @@ using Modules = IdentityServer3.Core.Models;
 using Entitys = IdentityServer3.EntityFrameworkCore.Entities;
 using IdentityServer3.EntityFrameworkCore.DbContexts;
 using IdentityServer3.EntityFrameworkCore.Extensions;
+using IdentityService.Domain;
+using IdentityService.Domain.Entitys;
 
 namespace IdentityService.Migrations
 {
@@ -71,7 +73,7 @@ namespace IdentityService.Migrations
             var user = await userManager.FindByNameAsync("admin");
             if (user == null)
             {
-                user = new User { UserName = "admin", Email = "admin@mail.com", FirstName = "Lyu" };
+                user = new User { UserName = "admin", Email = "admin@mail.com", Name = "Admin", Sex = Sex.Man };
                 await userManager.CreateAsync(user, "admin");
                 await userManager.AddToRoleAsync(user, adminRole);
                 await userManager.AddToRoleAsync(user, "IdentityServerAdmin");
@@ -104,7 +106,7 @@ namespace IdentityService.Migrations
                 AllowedScopes =new List<Entitys.ClientScope>() {
                     new Entitys.ClientScope() {Scope =IdentityServer3.Core.Constants.StandardScopes.OpenId },
                     new Entitys.ClientScope() {Scope =IdentityServer3.Core.Constants.StandardScopes.Profile },
-                    new Entitys.ClientScope() {Scope =IdentityManager.Constants.IdMgrScope },
+                    //new Entitys.ClientScope() {Scope =IdentityManager.Constants.IdMgrScope },
                     new Entitys.ClientScope() {Scope =IdentityAdmin.Constants.IdAdminScope },
               }
             });
@@ -122,7 +124,7 @@ namespace IdentityService.Migrations
 
             dbContext.Scopes.Add(new IdentityServer3.EntityFrameworkCore.Entities.Scope()
             {
-                Name = IdentityManager.Constants.IdMgrScope,
+                //Name = IdentityManager.Constants.IdMgrScope,
                 DisplayName = "IdentityManager",
                 Description = "Authorization for IdentityManager",
                 Type = 0,

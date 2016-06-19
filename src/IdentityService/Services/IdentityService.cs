@@ -9,6 +9,8 @@ using IdentityServer3.AspNetCore.Identity;
 using IdentityServer3.AspNetIdentity;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services;
+using IdentityService.Domain;
+using IdentityService.Domain.Entitys;
 using IdentityService.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +37,9 @@ namespace IdentityService.Services
                 options.Password.RequireNonAlphanumeric = false;
             });
             serviceCollection.AddScoped<UserManager<User>, UserManager>();
+            serviceCollection.AddScoped<UserManager>();
             serviceCollection.AddScoped<RoleManager<Role>, RoleManager>();
+            serviceCollection.AddScoped<RoleManager>();
             serviceCollection.AddScoped<IUserStore<User>, IdentityUserStore>();
             serviceCollection.AddScoped<IRoleStore<Role>, RoleStore>();
             serviceCollection.AddSingleton(typeof (IServiceCollection), serviceCollection);

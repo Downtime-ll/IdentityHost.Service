@@ -1,24 +1,23 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using IdentityAdmin.Core;
 using IdentityAdmin.Core.Client;
 using IdentityAdmin.Core.Metadata;
 using IdentityAdmin.Core.Scope;
+using IdentityAdmin.Extensions;
 using IdentityServer3.Core.Models;
 using IdentityServer3.EntityFrameworkCore.DbContexts;
 using IdentityServer3.EntityFrameworkCore.Entities;
+using Microsoft.EntityFrameworkCore;
 using Client = IdentityServer3.EntityFrameworkCore.Entities.Client;
 using Scope = IdentityServer3.EntityFrameworkCore.Entities.Scope;
 using ScopeClaim = IdentityServer3.EntityFrameworkCore.Entities.ScopeClaim;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using IdentityAdmin.Extensions;
 
-namespace IdentityServer3.Admin.EntityFrameworkCore
+namespace IdentityService.Services
 {
     public class IdentityAdminCoreManager<TCLient, TScope, TScopeConfigurationContext, TClientConfigurationContext> : IIdentityAdminService
         where TCLient : Client,new()

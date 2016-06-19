@@ -27,7 +27,7 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.TraceSource": "1.0.0-rc2-final",
     "IdentityServer3.AspNetCore.Identity": "1.0.0-*",
-    "IdentityManager.AspNetCore.Identity": "1.0.0-*",
+    //"IdentityManager.AspNetCore.Identity": "1.0.0-*",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
     "Microsoft.EntityFrameworkCore.Relational": "1.0.0-rc2-final",
     "Microsoft.Owin": "3.0.1",
@@ -40,13 +40,13 @@
     "IdentityServer3.Admin": "1.0.0-beta8" ,
     "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0-rc2-final",
-    "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.0-rc2-final" 
-    
-  },
+    "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.0-rc2-final",
+    "IdentityService.Domain": "1.0.0-*",
+    "AutoMapper":"4.2.1"
+  }, 
 
   "frameworks": {
-    "net452": {
-     
+    "net451": {
     }
   },
 
@@ -64,10 +64,7 @@
   },
 
   "tools": {
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": {
-      "version": "1.0.0-*",
-      "imports": "portable-net45+wp80+win8+wpa81+dnxcore50"
-    },
+  
     "Microsoft.EntityFrameworkCore.Tools": {
       "imports": [ "portable-net451+win8" ],
       "version": "1.0.0-preview1-final"
@@ -78,3 +75,6 @@
     "postpublish": "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%"
   }
 }
+
+
+

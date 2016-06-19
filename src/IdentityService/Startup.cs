@@ -75,19 +75,12 @@ namespace IdentityService
 
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            //Log.Logger = new LoggerConfiguration()
-            //    .MinimumLevel.Debug()
-            //    .WriteTo.LiterateConsole()
-            //    .CreateLogger();
-
             Log.Logger = new LoggerConfiguration()
                               .WriteTo.Trace(outputTemplate: "{Timestamp} [{Level}] ({Name}){NewLine} {Message}{NewLine}{Exception}")
                               .CreateLogger();
 
             var sourceSwitch = new SourceSwitch("LoggingSample");
             sourceSwitch.Level = SourceLevels.All;
-            //loggerFactory.AddTraceSource(sourceSwitch,
-            //    new ConsoleTraceListener(false));
             loggerFactory.AddTraceSource(sourceSwitch,
                 new EventLogTraceListener("Application"));
 
@@ -99,8 +92,6 @@ namespace IdentityService
                 AuthenticationScheme = "Cookies",
                 AutomaticAuthenticate = true,
             });
-
-
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions()
             {
@@ -119,25 +110,10 @@ namespace IdentityService
                
             });
 
-            //    app.UseJwtBearerAuthentication(new JwtBearerOptions()
-            //{
-
-            //    Authority = "http://localhost:58319/core",
-            //    RequireHttpsMetadata = false,
-
-            //    Audience = "http://localhost:58319/resources",
-            //    AutomaticAuthenticate = true
-            //});
-
-
-
             app.UseStaticFiles();
             app.UseMvc();
-
-
             app.UseDatabaseErrorPage();
             app.UseDeveloperExceptionPage();
-
            
             app.Map("/adm", adminApp =>
             {
@@ -215,7 +191,6 @@ namespace IdentityService
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
-
             host.Run();
         }
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer3.Admin.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,16 +12,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using IdentityServer3.EntityFrameworkCore.Entities;
+using IdentityService.Domain;
+using IdentityService.Domain.Entitys;
+using IdentityService.Services;
 
 namespace IdentityService.Models
 {
-    public class User : IdentityUser
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-    }
-
-    public class Role : IdentityRole { }
+ 
 
     public class IdentityContext : IdentityDbContext<User, Role, string>
     {
