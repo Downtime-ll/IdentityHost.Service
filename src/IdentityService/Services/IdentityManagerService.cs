@@ -44,7 +44,6 @@ namespace IdentityService.Services
             }
 
             return new CallbackResult<string>(result.Errors.Select(x => x.Description).ToArray());
-
         }
 
         public Task<IdentityResult> DeleteUserAsync(string key)

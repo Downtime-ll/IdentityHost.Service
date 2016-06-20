@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E12A3CC1-0
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "IdentityService.Test", "test\IdentityService.Test\IdentityService.Test.xproj", "{75CE0095-922E-4907-BBDD-922237909A8B}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Nature.ServiceFabric.Mocks", "test\Nature.ServiceFabric.Mocks\Nature.ServiceFabric.Mocks.xproj", "{8843396C-76DB-4702-80D8-7087CA401703}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AzureWebSites|Any CPU = AzureWebSites|Any CPU
@@ -95,6 +97,18 @@ Global
 		{75CE0095-922E-4907-BBDD-922237909A8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{75CE0095-922E-4907-BBDD-922237909A8B}.Release|x64.ActiveCfg = Release|Any CPU
 		{75CE0095-922E-4907-BBDD-922237909A8B}.Release|x64.Build.0 = Release|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.AzureWebSites|Any CPU.ActiveCfg = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.AzureWebSites|Any CPU.Build.0 = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.AzureWebSites|x64.ActiveCfg = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.AzureWebSites|x64.Build.0 = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Debug|x64.Build.0 = Debug|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Release|x64.ActiveCfg = Release|Any CPU
+		{8843396C-76DB-4702-80D8-7087CA401703}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,5 +119,6 @@ Global
 		{1BB46BD6-6490-4FBD-BC7A-6D5F1AD017BA} = {98B995B5-D13F-41F1-B0EC-F8A9073B4025}
 		{B9DAC228-2DF3-4DDC-B826-A989EC2C851F} = {98B995B5-D13F-41F1-B0EC-F8A9073B4025}
 		{75CE0095-922E-4907-BBDD-922237909A8B} = {E12A3CC1-0FF6-4189-A120-6CFDA2C203E8}
+		{8843396C-76DB-4702-80D8-7087CA401703} = {E12A3CC1-0FF6-4189-A120-6CFDA2C203E8}
 	EndGlobalSection
 EndGlobal

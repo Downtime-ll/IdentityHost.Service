@@ -1,0 +1,13 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Microsoft.ServiceFabric": "5.1.150",
+    "Microsoft.ServiceFabric.Data": "2.1.150",
+    "Microsoft.ServiceFabric.Services": "2.1.150"
+  },
+
+  "frameworks": {
+   "net451": {} 
+  }
+}
