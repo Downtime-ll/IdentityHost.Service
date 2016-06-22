@@ -1,15 +1,20 @@
-﻿{
+{
    "buildOptions": {
     "warningsAsErrors": true
   },
   "dependencies": {
-     "dotnet-test-xunit": "1.0.0-*",
+    "dotnet-test-xunit": "1.0.0-*",
     "IdentityService": "0.0.1-*",
     "Microsoft.EntityFrameworkCore.InMemory": "1.0.0-rc2-final",
+    "Nature.ServiceFabric.Mocks": "1.0.0-*",
     "XUnit": "2.1.0"
   },
   "frameworks": {
-    "net452": { }
+    "net452": {
+      "frameworkAssemblies": {
+        "System.Numerics": "4.0.0.0"
+      }
+    }
   },
    "testRunner": "xunit" 
 }

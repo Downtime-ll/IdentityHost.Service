@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Fabric;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityService.Domain;
@@ -13,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Nature.Core.ObjectMapping;
 using Xunit;
 using IdentityService.Services;
+using Nature.Core;
+using Nature.ServiceFabric.Mocks;
 
 namespace IdentityService.Test
 {
@@ -29,7 +32,6 @@ namespace IdentityService.Test
                         b.UseInMemoryDatabase().UseInternalServiceProvider(serviceProvider));
 
             services.AddIdentityUserService<IdentityUserService>();
-            services.AddScoped<IIdentityManagerService, Services.IdentityService>();
             services.AddLogging();
             services.AddOptions();
             services.AddCoreServices();
@@ -37,12 +39,13 @@ namespace IdentityService.Test
 
             IApplicationBuilder builder = new ApplicationBuilder(_serviceProvider);
             builder.UseAtuoMapper();
+            builder.UseAppContextService();
         }
 
         [Fact]
         public async void CreateUser_ReturnValidatorError()
         {
-            var service = _serviceProvider.GetService<IIdentityManagerService>();
+            IIdentityManagerService service = new IdentityManagerService(this.CreateServiceContext(), null);
 
             var createUser = new CreateUserModel()
             {
@@ -56,7 +59,7 @@ namespace IdentityService.Test
         [Fact]
         public async void CreateUser_Success()
         {
-            var service = _serviceProvider.GetService<IIdentityManagerService>();
+            IIdentityManagerService service = new IdentityManagerService(this.CreateServiceContext(), null);
 
             var createUser = new CreateUserModel()
             {
@@ -78,6 +81,18 @@ namespace IdentityService.Test
             Assert.Equal(data.Email, createUser.Email);
             Assert.Equal(data.PhoneNumber, createUser.PhoneNumber);
             Assert.Equal(data.UserName, createUser.UserName);
+        }
+
+        private StatelessServiceContext CreateServiceContext()
+        {
+            return new StatelessServiceContext(
+                new NodeContext(String.Empty, new NodeId(0, 0), 0, String.Empty, String.Empty),
+                new MockCodePackageActivationContext(),
+                String.Empty,
+                new Uri("fabric:/Mock"),
+                null,
+                Guid.NewGuid(),
+                0);
         }
     }
 }

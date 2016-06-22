@@ -5,33 +5,21 @@
                  Version="1.0.0" 
                  xmlns="http://schemas.microsoft.com/2011/01/fabric">
    <ServiceTypes>
-      <StatelessServiceType ServiceTypeName="IdentityServiceType">
-         <Extensions>
-            <Extension Name="__GeneratedServiceType__">
-               <GeneratedNames xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
-                  <DefaultService Name="IdentityServiceService" />
-                  <ServiceEndpoint Name="IdentityServiceTypeEndpoint" />
-               </GeneratedNames>
-            </Extension>
-         </Extensions>
-      </StatelessServiceType>
+      <StatelessServiceType ServiceTypeName="IdentityManagerServiceType" />
    </ServiceTypes>
    <CodePackage Name="Code" Version="1.0.0">
       <EntryPoint>
          <ExeHost>
-            <Program>approot\runtimes\dnx-clr-win-x64.1.0.0-rc1-update1\bin\dnx.exe</Program>
-            <Arguments>--appbase approot\src\IdentityService Microsoft.Dnx.ApplicationHost Microsoft.ServiceFabric.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener</Arguments>
+            <Program>IdentityService.exe</Program>
             <WorkingFolder>CodePackage</WorkingFolder>
             <ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />
          </ExeHost>
       </EntryPoint>
    </CodePackage>
-  <!-- Config package is the contents of the Config directoy under PackageRoot that contains an 
-       independently-updateable and versioned set of custom configuration settings for your service. -->
   <ConfigPackage Name="Config" Version="1.0.0" />
    <Resources>
       <Endpoints>
-         <Endpoint Name="IdentityServiceTypeEndpoint" Protocol="http" Type="Input" Port="8088" />
+         <Endpoint Name="IdentityManagerServiceTypeEndpoint" Protocol="http" Type="Input" />
       </Endpoints>
    </Resources>
 </ServiceManifest>

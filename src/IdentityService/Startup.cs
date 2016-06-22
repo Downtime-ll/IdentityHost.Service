@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Owin.Security;
 using Owin;
 using System.IdentityModel.Tokens.Jwt;
+using IdentityService.Domain;
 using Microsoft.AspNetCore.Http;
 
 namespace IdentityService
@@ -57,20 +58,23 @@ namespace IdentityService
             services.AddMvc();
             services.AddIdentityUserService<IdentityUserService>();
 
+            /**************** DB *****************/
             string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddEntityFramework()
                 .AddDbContext<NullDbContext>(options => options.UseSqlServer(connectionString))
                 .AddDbContext<IdentityContext>(options => options.UseSqlServer(connectionString))
                 .AddDbContext<IdentityClientConfigurationContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<IdentityScopeConfigurationContext>(o => o.UseSqlServer(connectionString))
-                
                 .AddDbContext<IdentityOperationalContext>(o => o.UseSqlServer(connectionString));
-
             services.AddScoped<OperationalContext, IdentityOperationalContext>();
             services.AddScoped<ClientConfigurationContext, IdentityClientConfigurationContext>();
             services.AddScoped<ScopeConfigurationContext, IdentityScopeConfigurationContext>();
 
             services.AddScoped<IClientStore, ClientStore>();
+
+            services.AddCoreServices();
+
+            services.AddServiceFabricService<IIdentityManagerService, IdentityManagerService>();
         }
 
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -181,17 +185,6 @@ namespace IdentityService
 
             //初始化数据
             app.ApplicationServices.SendData();
-        }
-
-        public static void Main(string[] args)
-        {
-            var host = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseKestrel()
-                .UseStartup<Startup>()
-                .Build();
-            host.Run();
         }
     }
 }

@@ -6,7 +6,8 @@
     "Microsoft.Extensions.DependencyInjection": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc2-final",
     "AutoMapper": "4.2.1",
-    "FluentValidation": "6.3.4-alpha"
+    "FluentValidation": "6.3.4-alpha",
+    "Microsoft.ServiceFabric.Services": "2.1.150"
   },
 
   "frameworks": {
